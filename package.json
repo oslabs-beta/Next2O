@@ -1,0 +1,60 @@
+{
+  "name": "chrome-ext",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "mode": "production",
+  "scripts": {
+    "start": "nodemon server/server.js",
+    "dev": "nodemon server/server.js & NODE_ENV=development webpack serve",
+    "build": "webpack --mode production",
+    "test": "",
+    "eject": ""
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "keywords": [],
+  "author": "Emad Kalalipour, Henry Halse, Uma Sowmiyamurthy, Yarden Edry, Wendy Kuo",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "chrome-launcher": "^0.15.1",
+    "cors": "^2.8.5",
+    "d3": "^7.8.0",
+    "express": "^4.18.2",
+    "react": "^18.2.0",
+    "react-d3-tree": "^3.4.2",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "save": "^2.9.0",
+    "web-vitals": "^3.1.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.18.6",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@types/chrome": "^0.0.208",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^6.7.3",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "lighthouse": "^9.6.8",
+    "nodemon": "^2.0.20",
+    "sass": "^1.57.1",
+    "sass-loader": "^13.2.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  }
+}
