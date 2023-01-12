@@ -1,0 +1,15 @@
+{
+    "short_name": "Next2O",
+    "name": "Next2O",
+    "version": "0.1",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "index.html",
+      "default_title": "open popup"
+    },
+    "permissions": [
+      "activeTab",
+      "scripting"
+    ]
+  }
+  
