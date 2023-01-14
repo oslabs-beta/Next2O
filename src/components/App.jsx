@@ -1,21 +1,19 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Tree from 'react-d3-tree';
 
-
-function App() {
-
+export default function App () {
+  
   //this is the object we will create the tree from
   const [nestedObj, setNestedObj] = useState({
     name: undefined
   })
+
   // eslint-disable-next-line no-undef
 
   //inject script to current browser, pull out nested object made from DOM tree
   async function injectFunction() {
     const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-    await chrome.scripting.executeScript({
+    chrome.scripting.executeScript({
       target: {tabId: tab.id, allFrames: true},
       func: grabTreeFromBrowser,
       world: "MAIN"
@@ -33,21 +31,28 @@ function App() {
   //creates a deeply nested object
   function grabTreeFromBrowser() {
 
+    const root = document.getElementById('__next') ? document.getElementById('__next') : document.getElementById('__gatsby') ? document.getElementById('__gatsby') : document.getElementById('root') ? document.getElementById('root') : document.body
     //create tree walker
-    const tree = document.createTreeWalker(document.getElementById('__next'))
+    const tree = document.createTreeWalker(root)
     const node = tree.currentNode
     const nodeObj = {}
 
+    
+    
     //BFS
     const queue = [{domNode: node, context: nodeObj}]
     while (queue.length > 0) {
       //context aka pointer to layer of object
       const {domNode, context} = queue.shift();
-      console.log(domNode)
 
       //add keys to object
       if (!context.attributes) context.attributes = {}
       if (!context.name) context.name = ''
+
+      // if (domNode.onclick && domNode.onclick !== undefined && domNode.onclick !== null) {
+      //   console.log(domNode.onclick)
+      //   context.attributes.onclick = domNode.onclick
+      // }
 
       //add name and text to object
       if (domNode.nodeName) context.name = domNode.nodeName
@@ -64,16 +69,24 @@ function App() {
           }
         }
       }
-
-      //check to see if react fiber has event listeners or text props
-    //  if (Object.keys(domNode).length > 1 && String(Object.keys(domNode)[1]).includes('__reactProps')) {
-    //    let prop = domNode[Object.keys(domNode)[1]]
-    //    if (prop.children !== null && prop.children !== undefined && !Array.isArray(prop.children)) {
+    const keys = Object.keys(domNode)
+    if (keys.length > 1 && keys[1].includes('__reactProps')) {
+      const propKeys = Object.keys(domNode[keys[1]])
+      for (let i = 0; i < propKeys.length; i++) {
+        if (propKeys[i].includes('on')) {
+          context.attributes[propKeys[i]] = domNode[keys[1]][propKeys[i]]
+        }
+      }
+    }
+    //check to see if react fiber has event listeners or text props
+      // if (Object.keys(domNode).length > 1 && String(Object.keys(domNode)[1]).includes('__reactProps')) {
+      //   let prop = domNode[Object.keys(domNode)[1]]
+      //   if (prop.children !== null && prop.children !== undefined && !Array.isArray(prop.children)) {
       //     context.attributes.text = prop.children
-    //    }
-        // let propChain = Object.keys(prop)
-        // console.log(propChain)
-      //  if (propChain.length > 0) {
+      //   }
+      //   let propChain = Object.keys(prop)
+      //   console.log(propChain)
+      //   if (propChain.length > 0) {
       //     for (let i = 0; i < propChain.length; i++) {
       //       if (propChain[i].slice(0, 2) === 'on') {
       //         let hydratedProp = propChain[i]
@@ -87,8 +100,8 @@ function App() {
       //         }
       //       }
       //     }
-      //  }
-      //}
+      //   }
+      // }
 
       //push node onto queue with correct pointer
       if (domNode.childNodes !== null && domNode.childNodes.length > 0) {
@@ -98,7 +111,6 @@ function App() {
         }
       }
     }
-    console.log(nodeObj)
     return nodeObj
   }
 
@@ -115,74 +127,87 @@ function App() {
     xmlhttp.send(null);
     const parser = new DOMParser()
     const doc = parser.parseFromString(xmlhttp.responseText, 'text/html')
+    console.log(doc.body)
 
     //make tree from DOM
-    const root = doc.getElementById('__next')
+    const root = document.getElementById('__next') ? document.getElementById('__next') : document.getElementById('__gatsby') ? document.getElementById('__gatsby') : document.getElementById('root') ? document.getElementById('root') : document.body
     const tree = doc.createTreeWalker(root)
-    console.log(tree)
+    // const serializer = new XMLSerializer()
+    // const xmlNode = serializer.serializeToString(root)  
+    // const newNode = parser.parseFromString(xmlNode, 'text/xml')
+    // const newRoot = newNode.getElementById('__next')
+    // const newTree = document.createTreeWalker(newRoot)
+    // console.log(newTree)
+
     
     //BFS
     const queue = [{node: tree.currentNode, pointer: currentTree}]
     while (queue.length > 0) {
 
-      const {node, pointer} = queue.shift()
+      const {node, pointer} = queue.shift();
+
+      if (node.nodeName !== pointer.name) {
+        pointer.attributes.flagged = true
+        pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
+      }
 
       //check content of current node, compare to browser tree
       if (node.textContent) {
         if (pointer) {
           if (pointer.attributes.content) {
             if (pointer.attributes.content !== node.textContent) {
-              pointer.attributes.mismatch = 'flagged'
+              pointer.attributes.flagged = true
+              pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
             }
           }
         }
-      }
+      }    
+
+      
 
       //create offset if fetched DOM has more elements
       let offset = 0
-      for (let i = 0; i < node.childNodes.length; i++) {
-        if (node.childNodes[i].nodeName !== pointer.children[i - offset].name.toLowerCase()) {
+      const childList = node.childNodes
+      for (let i = 0; i < childList.length; i++) {
+        const currentElementName = childList[i].nodeName
+        const parentElementName = node.nodeName
+        if (childList[i].nodeName !== pointer.children[i - offset].name) {
+          console.log(childList[i])
           offset++
           continue
         } else {
-          queue.push({node: node.childNodes[i], pointer: pointer.children[i - offset]})
+          if (parentElementName === currentElementName || parentElementName === pointer.children[i - offset].name) {
+            if (parentElementName !== 'DIV') {
+              pointer.attributes.flagged = true
+              pointer.attributes.nestedElements = 'make sure you dont have nested HTML elements'
+            }
+          }
+          if (parentElementName.toLowerCase() === 'a') {
+            if (currentElementName.toLowerCase() === 'button') {
+              pointer.attributes.flagged = true
+              pointer.attributes.improperNesting = 'avoid nesting button inside a element'
+            }
+          }
+          if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
+            if (currentElementName !== 'li' && currentElementName !== 'script' && currentElementName !== 'template') {
+              pointer.attributes.flagged = true
+              pointer.attributes.improperListNesting = 'avoid nesting anything other than li, script, or template in a list'
+            }
+          }
+          queue.push({node: childList[i], pointer: pointer.children[i - offset]})
         }
       }
     }
     console.log(currentTree)
     return currentTree
-  };
+  }
   
-  const runLighthouse = async(e) => {
-    e.preventDefault();
-    const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
-    try {
-      const response = await fetch('http://localhost:8080/api/lighthouse', {
-        method: 'POST',
-        body: JSON.stringify({ url: currentTab[0].url }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const report = await response.json();
-      const parsed = JSON.parse(report.report)
-      console.log(parsed.categories.seo.score)
-    } catch (err) {
-      console.log(err)
-    }
-  
-  };
-
   return (
     <div className="App" style={{height: '2000px', width: '2000px'}}>
       <button onClick={injectFunction}>Click me</button>
-      <button onClick={runComparison}>Grab new tree</button>
-      <button onClick={runLighthouse}> Run lighthouse test</button>
       <div id="treeWrapper" style={{height: '1000px', width: '1000px'}}>
         {nestedObj.name ? 'works' : ''}
       </div>
     </div>
   );
 }
-
-export default App;

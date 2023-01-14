@@ -1,26 +1,23 @@
 
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 
 
 module.exports = {
-  mode: process.env.NODE_ENV,
-  entry: path.resolve(__dirname, "./src/index.js"),
+  mode: 'development',
+  entry: path.resolve(__dirname, "./src/index.jsx"),
   output: {
-    path: path.resolve(__dirname, "./dist"),
-    filename: "bundle.js",
+    path: path.resolve(__dirname, "./build"),
+    filename: "[name].js",
+    clean: true,
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|ts)x$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-          },
-        },
+        use: ['babel-loader'],
       },
       {
         test: /scss$/,
@@ -36,13 +33,14 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ["*", ".js", ".jsx"],
+    extensions: ['.ts', '.js', '.jsx', '.tsx']
   },
+  devtool: 'source-map',
   devServer: {
     host: 'localhost',
     port: 8080,
     static: {
-      directory: path.resolve(__dirname, "./dist"),
+      directory: path.resolve(__dirname, "./build"),
     },
     historyApiFallback: true,
     proxy: {
@@ -53,8 +51,8 @@ module.exports = {
     }
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, './dist/index.html')
+    new CopyPlugin({
+      patterns: [{from: 'public'}]
     })
   ],
 };
