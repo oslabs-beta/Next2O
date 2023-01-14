@@ -201,10 +201,31 @@ export default function App () {
     console.log(currentTree)
     return currentTree
   }
+
+  const runLighthouse = async(e) => {
+    e.preventDefault();
+    const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+    try {
+      const response = await fetch('http://localhost:8080/api/lighthouse', {
+        method: 'POST',
+        body: JSON.stringify({ url: currentTab[0].url }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const report = await response.json();
+      const parsed = JSON.parse(report.report)
+      console.log(parsed.categories.seo.score)
+    } catch (err) {
+      console.log(err)
+    }
+
+  };
   
   return (
     <div className="App" style={{height: '2000px', width: '2000px'}}>
       <button onClick={injectFunction}>Click me</button>
+      <button onClick={runLighthouse}> Run lighthouse test</button>
       <div id="treeWrapper" style={{height: '1000px', width: '1000px'}}>
         {nestedObj.name ? 'works' : ''}
       </div>
