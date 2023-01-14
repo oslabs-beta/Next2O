@@ -6,7 +6,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: path.resolve(__dirname, "./src/index.tsx"),
+  entry: path.resolve(__dirname, "./src/index.jsx"),
   output: {
     path: path.resolve(__dirname, "./build"),
     filename: "[name].js",
@@ -15,12 +15,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/,
+        test: /\.(js|ts)x$/,
         exclude: /node_modules/,
-        resolve: {
-          extensions: ['.ts', '.tsx', '.js', '.jsx']
-        },
-        use: 'ts-loader',
+        use: ['babel-loader'],
       },
       {
         test: /scss$/,
@@ -34,6 +31,9 @@ module.exports = {
         }
     },
     ],
+  },
+  resolve: {
+    extensions: ['.ts', '.js', '.jsx', '.tsx']
   },
   devtool: 'source-map',
   devServer: {
