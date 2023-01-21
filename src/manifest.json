@@ -1,0 +1,25 @@
+{
+  "short_name": "Next2O",
+  "name": "Next2O",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": ["background.js"]
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "open popup"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "cookies",
+    "background",
+    "tabs",
+    "<all_urls>"
+  ]
+  
+}

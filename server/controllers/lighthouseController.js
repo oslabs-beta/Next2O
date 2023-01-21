@@ -4,16 +4,6 @@ const chromeLauncher = require('chrome-launcher');
 
 const lighthouseController = {};
 
-// async function launchChromeAndRunLighthouse(url, opts) {
-//   console.log('launchchromerunlighthouse')
-//   const chrome = await chromeLauncher.launch({ chromeFlags: ['--disable-gpu', '--headless',
-//    '--remote-debugging-port=9222', '--ignore-certificate-errors'] });
-//   opts.port = chrome.port;
-//   const lhr = await lighthouse(url, opts);
-
-//   await chrome.kill();
-//   return lhr;
-// };
 async function launchChromeAndRunLighthouse(url) {
   const chrome = await chromeLauncher.launch({startingUrl: url, chromeFlags: ['--headless', '--disable-gpu']})
     // '--remote-debugging-port=9222', '--ignore-certificate-errors']});
@@ -25,20 +15,13 @@ async function launchChromeAndRunLighthouse(url) {
   await chrome.kill();
   return runnerResult.report
 
-  // `.report` is the HTML report as a string
-  // const reportHtml = runnerResult.report;
-  // fs.writeFileSync('lhreport.html', reportHtml);
-
-  // // `.lhr` is the Lighthouse Result as a JS object
-  // console.log('Report is done for', runnerResult.lhr.finalDisplayedUrl);
-  // console.log('Performance score was', runnerResult.lhr.categories.performance.score * 100);
-
 };
 
 lighthouseController.generateReport = async (req, res, next) => {
   //console.log(req.body)
-  const {url} = req.body;
-  
+  const {url, cookies} = req.body;
+  // const {cookies} = req.headers;
+  console.log(req.headers);
   try {
     const report = await launchChromeAndRunLighthouse(url);
     res.locals.report = report
