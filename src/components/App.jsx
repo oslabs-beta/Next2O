@@ -200,7 +200,29 @@ export default function App () {
     }
     console.log(currentTree)
     return currentTree
-  }
+  };
+  
+  const setCookies = async () => {
+    try {
+      const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+      chrome.cookies.set({
+        url: currentTab[0].url,
+        name: 'userId',
+        value: userId
+      });
+      const response = await fetch('http://localhost:8080/setCookies', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: userId
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    } catch(err) {
+      console.log(err);
+    }
+  };
 
   const runLighthouse = async(e) => {
     e.preventDefault();
@@ -215,6 +237,7 @@ export default function App () {
       });
       const report = await response.json();
       const parsed = JSON.parse(report.report)
+      console.log(parsed)
       console.log(parsed.categories.seo.score)
     } catch (err) {
       console.log(err)

@@ -3,13 +3,24 @@
     "name": "Next2O",
     "version": "0.1",
     "manifest_version": 3,
+    "background": {
+      "service_worker": "background.js"
+    },
     "action": {
       "default_popup": "index.html",
       "default_title": "open popup"
     },
+    "host_permissions": [
+      "<all_urls>"
+    ],
     "permissions": [
       "activeTab",
-      "scripting"
+      "scripting",
+      "background",
+      "cookies",
+      "tabs",
+      "<all_urls>"
     ]
+    
   }
   
