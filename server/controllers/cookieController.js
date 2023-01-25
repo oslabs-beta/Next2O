@@ -1,5 +1,5 @@
 // const uuid = require('uuid');
-// const cookieController = {};
+ const cookieController = {};
 
 // cookieController.setCookies = (req, res, next) => {
 //   const userId= req.body.userId || uuid.v4();
@@ -17,5 +17,14 @@
 //   const currentTime = new Date().getTime();
 //   const createdTime = req.signedCookie.created_at;
 // }
+cookieController.checkForCookie = (req, res, next) => {
+  const userId = req.cookies.userId;
+  if (userId) {
+      console.log('Cookie found:', userId);
+  } else {
+      console.log('Cookie not found');
+  }
+  return next();
+};
 
-//module.exports = cookieController;
+module.exports = cookieController;

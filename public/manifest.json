@@ -18,8 +18,7 @@
       "scripting",
       "background",
       "cookies",
-      "tabs",
-      "<all_urls>"
+      "tabs"
     ]
     
   }

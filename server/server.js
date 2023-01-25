@@ -4,17 +4,15 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const lighthouseRouter = require('./routes/lighthouseApi.js');
-//const cookieRouter = require('./routes/cookies.js');
+const cookieRouter = require('./routes/cookies.js');
 const databaseRouter = require('./routes/databaseApi');
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
-// app.use(express.urlencoded());
-// app.use(bodyParser.json());
 
 
-//app.use('/', cookieRouter);
+app.use('/', cookieRouter);
 app.use('/api', lighthouseRouter);
 app.use('/', databaseRouter);
 
