@@ -1,0 +1,1 @@
+chrome.runtime.onInstalled.addListener((async()=>{const e=await chrome.tabs.query({active:!0,currentWindow:!0});console.log("heloo"),chrome.cookies.set({url:e[0].url,name:"userId",value:"1234567",expirationDate:(new Date).getTime()/1e3+3600}),chrome.cookies.get({url:e[0].url,name:"userId"},(e=>{console.log(e)}))}));

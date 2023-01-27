@@ -130,7 +130,7 @@ export default function App () {
     console.log(doc.body)
 
     //make tree from DOM
-    const root = document.getElementById('__next') ? document.getElementById('__next') : document.getElementById('__gatsby') ? document.getElementById('__gatsby') : document.getElementById('root') ? document.getElementById('root') : document.body
+    const root = doc.getElementById('__next') ? doc.getElementById('__next') : doc.getElementById('__gatsby') ? doc.getElementById('__gatsby') : doc.getElementById('root') ? doc.getElementById('root') : doc.body
     const tree = doc.createTreeWalker(root)
     // const serializer = new XMLSerializer()
     // const xmlNode = serializer.serializeToString(root)  
