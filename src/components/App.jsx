@@ -228,7 +228,7 @@ export default function App () {
     e.preventDefault();
     const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
     try {
-      const response = await fetch('http://localhost:8080/api/lighthouse', {
+      const response = await fetch('54.174.204.176:8080/api/lighthouse', {
         method: 'POST',
         body: JSON.stringify({ url: currentTab[0].url }),
         headers: {

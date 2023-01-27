@@ -5,10 +5,9 @@ const chromeLauncher = require('chrome-launcher');
 const lighthouseController = {};
 
 async function launchChromeAndRunLighthouse(url) {
-  const chrome = await chromeLauncher.launch({startingUrl: url, chromeFlags: ['--headless=chrome']})
+  const chrome = await chromeLauncher.launch({port: 3001, startingUrl: url, chromeFlags: ['--headless', '--no-sandbox', '--disable-gpu', '--no-first-run']})
     // '--remote-debugging-port=9222', '--ignore-certificate-errors']});
-  const opts = {logLevel: 'info', output: 'json', onlyCategories: ['seo']};
-  opts.port = chrome.port
+  const opts = {logLevel: 'info', output: 'json', port: 3001};
   const runnerResult = await lighthouse(url, opts);
   console.log('runner result')
   console.log(runnerResult)
