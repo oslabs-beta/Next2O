@@ -6,7 +6,10 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: path.resolve(__dirname, "./src/index.jsx"),
+  entry: { 
+    index: path.resolve(__dirname, "./src/index.jsx"),
+    background: path.resolve(__dirname, "./src/background.js")
+  },
   output: {
     path: path.resolve(__dirname, "./build"),
     filename: "[name].js",
@@ -17,7 +20,12 @@ module.exports = {
       {
         test: /\.(js|ts)x$/,
         exclude: /node_modules/,
-        use: ['babel-loader'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        },
       },
       {
         test: /scss$/,
@@ -53,6 +61,10 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [{from: 'public'}]
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
     })
   ],
 };
