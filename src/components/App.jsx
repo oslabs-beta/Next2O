@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
+import * as d3 from 'd3';
+import ReactSpeedometer from "react-d3-speedometer";
 
 export default function App () {
   
@@ -7,6 +9,8 @@ export default function App () {
   const [nestedObj, setNestedObj] = useState({
     name: undefined
   })
+  const [seoScore, setSeoScore] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
 
   // eslint-disable-next-line no-undef
 
@@ -216,8 +220,11 @@ export default function App () {
       const report = await response.json();
       const parsed = JSON.parse(report.report)
       console.log(parsed.categories.seo.score)
+      setSeoScore(parsed.categories.seo.score * 100)
+      setIsLoading(false)
     } catch (err) {
       console.log(err)
+      setIsLoading(false)
     }
 
   };
@@ -226,6 +233,16 @@ export default function App () {
     <div className="App" style={{height: '2000px', width: '2000px'}}>
       <button onClick={injectFunction}>Click me</button>
       <button onClick={runLighthouse}> Run lighthouse test</button>
+      <h1>SEO Score: {isLoading && "loading..." }</h1>
+            <div id="speedometer"></div>
+            <ReactSpeedometer
+                maxValue={100}
+                value={seoScore}
+                needleColor="red"
+                startColor="green"
+                segments={4}
+                endColor="blue"
+            />
       <div id="treeWrapper" style={{height: '1000px', width: '1000px'}}>
         {nestedObj.name ? 'works' : ''}
       </div>
