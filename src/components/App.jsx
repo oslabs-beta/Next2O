@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import { DisplaySeo } from './DisplaySeo';
 
 export default function App () {
   
@@ -13,7 +14,7 @@ export default function App () {
   const [domain, setDomain] = useState('');
   const [userId, setUserId] = useState('');
   const [buttonClicked, setButtonClicked] = useState(false);
-
+  const [lighthouseData, setLighthouseData] = useState({});
   // eslint-disable-next-line no-undef
 
   //inject script to current browser, pull out nested object made from DOM tree
@@ -429,6 +430,7 @@ useEffect(() => {
       }
       const report = await response.json();
       parsed = JSON.parse(report.report);
+      setLighthouseData(report.report);
       console.log(parsed);
       console.log(parsed.categories.seo.score);
       try {
@@ -472,6 +474,7 @@ useEffect(() => {
       {/* <button onClick={grabCookiesFromBackground}> click to set cookies</button> */}
       <p>{url}</p>
       {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
+      {/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */}
       <div id="treeWrapper" style={{height: '1000px', width: '1000px'}}>
         {nestedObj.name ? 'works' : ''}
       </div>
