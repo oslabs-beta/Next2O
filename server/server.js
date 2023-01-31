@@ -3,20 +3,18 @@ const app = express();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
-const lighthouseRouter = require('./routes/lighthouseApi.js');
+const lighthouseRouter = require('./routes/lighthouseRouter.js');
 //const cookieRouter = require('./routes/cookies.js');
-const databaseRouter = require('./routes/databaseApi');
+const databaseRouter = require('./routes/databaseRouter.js');
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
-// app.use(express.urlencoded());
-// app.use(bodyParser.json());
 
 
-//app.use('/', cookieRouter);
+// app.use('/api', cookieRouter);
 app.use('/api', lighthouseRouter);
-app.use('/', databaseRouter);
+app.use('/api', databaseRouter);
 
 // catch-all route handler for any requests to an unknown route
 app.use((req, res) => res.status(404).json({"unknown": "route"}));
