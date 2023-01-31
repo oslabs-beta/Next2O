@@ -10,9 +10,6 @@
       "default_popup": "index.html",
       "default_title": "open popup"
     },
-    "host_permissions": [
-      "<all_urls>"
-    ],
     "permissions": [
       "activeTab",
       "scripting",

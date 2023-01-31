@@ -30,8 +30,8 @@ app.use((err, req, res, next) => {
   return JSON.stringify(errorObj.status, errorObj.message);
 });
 
-app.listen(8080, () =>{
-  console.log("server listening on port 8080")
+app.listen(80, () =>{
+  console.log("server listening on port 80")
 });
 
 module.exports = app;
