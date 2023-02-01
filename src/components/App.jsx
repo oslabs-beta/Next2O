@@ -1,21 +1,32 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
+<<<<<<< HEAD
+import * as d3 from 'd3';
+import ReactSpeedometer from "react-d3-speedometer";
+=======
 import { useEffect } from 'react';
 import { DisplaySeo } from './DisplaySeo';
 import * as d3 from 'd3';
 
 export default function App() {
+>>>>>>> 6bff5bceaedd080cde17bae635a75a15e0efef4d
 
   //this is the object we will create the tree from
   const [nestedObj, setNestedObj] = useState({
     name: undefined
   })
+<<<<<<< HEAD
+  const [seoScore, setSeoScore] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
+
+=======
   const [url, setUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [domain, setDomain] = useState('');
   const [userId, setUserId] = useState('');
   const [buttonClicked, setButtonClicked] = useState(false);
   const [lighthouseData, setLighthouseData] = useState({});
+>>>>>>> 6bff5bceaedd080cde17bae635a75a15e0efef4d
   // eslint-disable-next-line no-undef
 
   function treeGenerator(data) {
@@ -385,6 +396,27 @@ export default function App() {
     return currentTree
   };
 
+<<<<<<< HEAD
+  const runLighthouse = async(e) => {
+    e.preventDefault();
+    const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+    try {
+      const response = await fetch('http://localhost:8080/api/lighthouse', {
+        method: 'POST',
+        body: JSON.stringify({ url: currentTab[0].url }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const report = await response.json();
+      const parsed = JSON.parse(report.report)
+      console.log(parsed.categories.seo.score)
+      setSeoScore(parsed.categories.seo.score * 100)
+      setIsLoading(false)
+    } catch (err) {
+      console.log(err)
+      setIsLoading(false)
+=======
   // useEffect(() => {
   //   const runLighthouseAndSendCookies = async (e) => {
   //     e.preventDefault();
@@ -574,6 +606,7 @@ export default function App() {
   useEffect(() => {
     if (!buttonClicked) {
       return;
+>>>>>>> 6bff5bceaedd080cde17bae635a75a15e0efef4d
     }
 
     const runLighthouseAndSendCookies = async (e) => {
@@ -646,12 +679,27 @@ export default function App() {
   return (
     <div className="App" style={{ height: '2000px', width: '2000px' }}>
       <button onClick={injectFunction}>Click me</button>
+<<<<<<< HEAD
+      <button onClick={runLighthouse}> Run lighthouse test</button>
+      <h1>SEO Score: {isLoading && "loading..." }</h1>
+            <div id="speedometer"></div>
+            <ReactSpeedometer
+                maxValue={100}
+                value={seoScore}
+                needleColor="red"
+                startColor="green"
+                segments={4}
+                endColor="blue"
+            />
+      <div id="treeWrapper" style={{height: '1000px', width: '1000px'}}>
+=======
       <button onClick={handlelighthouseClick}> Run lighthouse test</button>
       {/* <button onClick={grabCookiesFromBackground}> click to set cookies</button> */}
       <p>{url}</p>
       {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
       {/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */}
       <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
+>>>>>>> 6bff5bceaedd080cde17bae635a75a15e0efef4d
         {nestedObj.name ? 'works' : ''}
       </div>
       <div><svg class='chart'></svg></div>
