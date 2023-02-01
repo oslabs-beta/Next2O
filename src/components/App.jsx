@@ -36,14 +36,13 @@ export default function App () {
     const tree = document.createTreeWalker(root)
     const node = tree.currentNode
     const nodeObj = {}
-
-    
     
     //BFS
     const queue = [{domNode: node, context: nodeObj}]
     while (queue.length > 0) {
       //context aka pointer to layer of object
       const {domNode, context} = queue.shift();
+      context.outerHTML = domNode.outerHTML
 
       //add keys to object
       if (!context.attributes) context.attributes = {}
@@ -127,11 +126,12 @@ export default function App () {
     xmlhttp.send(null);
     const parser = new DOMParser()
     const doc = parser.parseFromString(xmlhttp.responseText, 'text/html')
-    console.log(doc.body)
+    console.log(doc)
 
     //make tree from DOM
     const root = doc.getElementById('__next') ? doc.getElementById('__next') : doc.getElementById('__gatsby') ? doc.getElementById('__gatsby') : doc.getElementById('root') ? doc.getElementById('root') : doc.body
     const tree = doc.createTreeWalker(root)
+    console.log(tree)
     // const serializer = new XMLSerializer()
     // const xmlNode = serializer.serializeToString(root)  
     // const newNode = parser.parseFromString(xmlNode, 'text/xml')
@@ -143,8 +143,17 @@ export default function App () {
     //BFS
     const queue = [{node: tree.currentNode, pointer: currentTree}]
     while (queue.length > 0) {
+      if (!queue[0].pointer) console.log(queue)
 
       const {node, pointer} = queue.shift();
+
+      const nodeHTML = node.outerHTML;
+      if (nodeHTML !== pointer.outerHTML) {
+        pointer.attributes.flagged = true;
+        pointer.attributes.message = 'This element and all child elements underneath it were rendered from the client side. As such, they will not interfere with hydration.'
+        continue
+      }
+      if (pointer.name === undefined || pointer.name === null) console.log('its not here')
 
       if (node.nodeName !== pointer.name) {
         pointer.attributes.flagged = true
@@ -168,12 +177,17 @@ export default function App () {
       //create offset if fetched DOM has more elements
       let offset = 0
       const childList = node.childNodes
+      // if (childList.length) console.log(childList.length)
+      // if (pointer.children && pointer.children.length) console.log(pointer.children.length)
       for (let i = 0; i < childList.length; i++) {
         const currentElementName = childList[i].nodeName
         const parentElementName = node.nodeName
         if (childList[i].nodeName !== pointer.children[i - offset].name) {
-          console.log(childList[i])
+          console.log('offset div')
+          console.log(node)
+          console.log(pointer)
           offset++
+          console.log(offset)
           continue
         } else {
           if (parentElementName === currentElementName || parentElementName === pointer.children[i - offset].name) {
@@ -228,7 +242,7 @@ export default function App () {
     e.preventDefault();
     const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
     try {
-      const response = await fetch('54.174.204.176:8080/api/lighthouse', {
+      const response = await fetch('http://54.174.204.176:8080/api/lighthouse', {
         method: 'POST',
         body: JSON.stringify({ url: currentTab[0].url }),
         headers: {
