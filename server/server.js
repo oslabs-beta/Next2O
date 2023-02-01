@@ -1,20 +1,23 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const lighthouseRouter = require('./routes/lighthouseApi.js');
+const cookieParser = require('cookie-parser');
 
-app.use(cors());
+const lighthouseRouter = require('./routes/lighthouseRouter.js');
+//const cookieRouter = require('./routes/cookies.js');
+const databaseRouter = require('./routes/databaseRouter.js');
+
+app.use(cookieParser());
 app.use(express.json());
-// app.use(express.urlencoded());
-// app.use(bodyParser.json());
+app.use(cors());
 
 
+// app.use('/api', cookieRouter);
 app.use('/api', lighthouseRouter);
-// app.use('/api', lighthouseRouter);
-app.get('/', (req, res) => {
-  console.log(req.headers)
-  res.send('sdsds')
-});
+app.use('/api', databaseRouter);
+
+// catch-all route handler for any requests to an unknown route
+app.use((req, res) => res.status(404).json({ "unknown": "route" }));
 
 app.use((err, req, res, next) => {
   const defaultErr = {
@@ -27,7 +30,8 @@ app.use((err, req, res, next) => {
   return JSON.stringify(errorObj.status, errorObj.message);
 });
 
-app.listen(8080, () =>{
+app.listen(8080, () => {
   console.log("server listening on port 8080")
 });
 
+module.exports = app;
