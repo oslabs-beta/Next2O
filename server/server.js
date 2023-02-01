@@ -11,7 +11,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 
-
 // app.use('/api', cookieRouter);
 app.use('/api', lighthouseRouter);
 app.use('/api', databaseRouter);
@@ -30,8 +29,8 @@ app.use((err, req, res, next) => {
   return JSON.stringify(errorObj.status, errorObj.message);
 });
 
-app.listen(80, () =>{
-  console.log("server listening on port 80")
+app.listen(8080, () =>{
+  console.log("server listening on port 8080")
 });
 
 module.exports = app;
