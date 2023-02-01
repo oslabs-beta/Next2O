@@ -15,6 +15,7 @@ export default function App() {
   const [url, setUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [domain, setDomain] = useState('');
+  const [errorCount, setErrorCount] = useState(0)
   const [userId, setUserId] = useState('');
   const [buttonClicked, setButtonClicked] = useState(false);
   const [lighthouseData, setLighthouseData] = useState({});
@@ -337,6 +338,7 @@ export default function App() {
 
       if (node.nodeName !== pointer.name) {
         pointer.attributes.flagged = true
+        setErrorCount(errorCount + 1)
         pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
       }
 
@@ -346,6 +348,7 @@ export default function App() {
           if (pointer.attributes.content) {
             if (pointer.attributes.content !== node.textContent) {
               pointer.attributes.flagged = true
+              setErrorCount(errorCount + 1)
               pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
             }
           }
@@ -368,18 +371,21 @@ export default function App() {
           if (parentElementName === currentElementName || parentElementName === pointer.children[i - offset].name) {
             if (parentElementName !== 'DIV') {
               pointer.attributes.flagged = true
+              setErrorCount(errorCount + 1)
               pointer.attributes.nestedElements = 'make sure you dont have nested HTML elements'
             }
           }
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
+              setErrorCount(errorCount + 1)
               pointer.attributes.improperNesting = 'avoid nesting button inside a element'
             }
           }
           if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
             if (currentElementName !== 'li' && currentElementName !== 'script' && currentElementName !== 'template') {
               pointer.attributes.flagged = true
+              setErrorCount(errorCount + 1)
               pointer.attributes.improperListNesting = 'avoid nesting anything other than li, script, or template in a list'
             }
           }
@@ -653,7 +659,7 @@ export default function App() {
   // };
 
   return (
-   <MainUI performance={runLighthouseAndSendCookies} injector={injectFunction} />
+   <MainUI errorCount={errorCount} performance={runLighthouseAndSendCookies} injector={injectFunction} />
   );
 };
 

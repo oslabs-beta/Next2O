@@ -41,7 +41,17 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts', '.js', '.jsx', '.tsx']
+    extensions: ['.ts', '.js', '.jsx', '.tsx'],
+    alias: {
+      config$: './configs/app-config.js',
+      react: './vendor/react-master',
+    },
+    modules: [
+      'node_modules',
+      'bower_components',
+      'shared',
+      '/shared/vendor/modules',
+    ],
   },
   devtool: 'source-map',
   devServer: {

@@ -17,6 +17,7 @@ const MainUI = (props) => {
 
   return (
     <div className='div-container'>
+      <div><svg className='chart'></svg></div>
       <div className='div-wrapper'>
         <div className='div-header'>
             <div className='div-img-container'>
@@ -28,6 +29,7 @@ const MainUI = (props) => {
         </div>
 
         <div className='div-body'>
+          <div>Errors: {props.errorCount}</div>
         </div>
 
         <div className='div-footer'>
@@ -38,7 +40,7 @@ const MainUI = (props) => {
                 <div className='bot-tab-pop'>
                   <div className='bot-tab-pop-content'>Debugging</div>
                 </div>
-                <button className='bot-tab' onClick={runTreeVisualizer}><BugReportIcon /></button>
+                <div className='bot-tab' onClick={runTreeVisualizer}><BugReportIcon /></div>
               </div>
             </li>
 
@@ -47,7 +49,7 @@ const MainUI = (props) => {
                 <div className='bot-tab-pop'>
                   <div className='bot-tab-pop-content'>Performance</div>
                 </div>
-                <button className='bot-tab' onClick={runPerformanceAnalysis}><ElectricBoltIcon /></button>
+                <div className='bot-tab' onClick={runPerformanceAnalysis}><ElectricBoltIcon /></div>
               </div>
             </li>
 
