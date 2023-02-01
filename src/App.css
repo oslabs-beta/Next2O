@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  box-sizing: border-box;
 }
 /* .App-logo {
   height: 40vmin;
@@ -99,6 +101,7 @@ body {
   background-color: rgb(241 245 249);
   height: 500px;
 }
+
 
 .div-footer {
   text-align: center;
