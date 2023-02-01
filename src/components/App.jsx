@@ -192,6 +192,7 @@ export default function App() {
     }
 
     update(root);
+
   }
 
   //inject script to current browser, pull out nested object made from DOM tree
@@ -220,6 +221,7 @@ export default function App() {
     const tree = document.createTreeWalker(root)
     const node = tree.currentNode
     const nodeObj = {}
+
 
 
 
@@ -318,18 +320,10 @@ export default function App() {
     const root = doc.getElementById('__next') ? doc.getElementById('__next') : doc.getElementById('__gatsby') ? doc.getElementById('__gatsby') : doc.getElementById('root') ? doc.getElementById('root') : doc.body
     const tree = doc.createTreeWalker(root)
     console.log(tree)
-    // const serializer = new XMLSerializer()
-    // const xmlNode = serializer.serializeToString(root)  
-    // const newNode = parser.parseFromString(xmlNode, 'text/xml')
-    // const newRoot = newNode.getElementById('__next')
-    // const newTree = document.createTreeWalker(newRoot)
-    // console.log(newTree)
-
 
     //BFS
     const queue = [{ node: tree.currentNode, pointer: currentTree }]
     while (queue.length > 0) {
-      if (!queue[0].pointer) console.log(queue)
 
       const { node, pointer } = queue.shift();
 
@@ -363,17 +357,12 @@ export default function App() {
       //create offset if fetched DOM has more elements
       let offset = 0
       const childList = node.childNodes
-      // if (childList.length) console.log(childList.length)
-      // if (pointer.children && pointer.children.length) console.log(pointer.children.length)
+
       for (let i = 0; i < childList.length; i++) {
         const currentElementName = childList[i].nodeName
         const parentElementName = node.nodeName
         if (childList[i].nodeName !== pointer.children[i - offset].name) {
-          console.log('offset div')
-          console.log(node)
-          console.log(pointer)
           offset++
-          console.log(offset)
           continue
         } else {
           if (parentElementName === currentElementName || parentElementName === pointer.children[i - offset].name) {
@@ -589,80 +578,82 @@ export default function App() {
   //     console.log(err)
   //   }
   // }
-  useEffect(() => {
-    if (!buttonClicked) {
-      return;
-    }
 
-    const runLighthouseAndSendCookies = async (e) => {
-      // e.preventDefault();
-      chrome.runtime.sendMessage({ message: "get_current_tab_url" },
-        async (response) => {
-          if (response.error) {
-            setErrorMessage(response.error);
-          }
+  const runLighthouseAndSendCookies = async (e) => {
+    // e.preventDefault();
+    chrome.runtime.sendMessage({ message: "get_current_tab_url" },
+      async (response) => {
+        if (response.error) {
+          setErrorMessage(response.error);
+        }
 
-          await setUrl(response.url);
-          await setDomain(response.domain);
-          await setUserId(response.userId);
-          console.log(domain, userId);
-          console.log(response.domain, response.userId);
-        });
+        await setUrl(response.url);
+        await setDomain(response.domain);
+        await setUserId(response.userId);
+        console.log(domain, userId);
+        console.log(response.domain, response.userId);
+      });
 
-      const currentTab = await chrome.tabs.query({ active: true, currentWindow: true });
+    const currentTab = await chrome.tabs.query({ active: true, currentWindow: true });
+    try {
+      let parsed = ''
+      const response = await fetch('http://localhost:8080/api/lighthouse', {
+        method: 'POST',
+        body: JSON.stringify({ url: currentTab[0].url }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText)
+      }
+      const report = await response.json();
+      parsed = JSON.parse(report.report);
+      setLighthouseData(report.report);
+      console.log(parsed);
+      console.log(parsed.categories.seo.score);
       try {
-        let parsed = ''
-        const response = await fetch('http://localhost:8080/api/lighthouse', {
-          method: 'POST',
-          body: JSON.stringify({ url: currentTab[0].url }),
+        console.log('userId> ' + userId, 'domain> ' + domain,)
+        const response2 = await fetch('http://localhost:8080/api/seoItems', {
+          method: "POST",
+          body: JSON.stringify({
+            userId: userId, domain: response.domain,
+            score: parsed.categories.seo.score, audits: parsed.audits,
+            categoryGroups: parsed.categoryGroups
+          }),
           headers: {
-            'Content-Type': 'application/json'
+            "content-Type": "application/json"
           }
         });
-        if (!response.ok) {
-          throw new Error(response.statusText)
+        console.log(response2)
+        if (!response2.ok) {
+          throw new Error(response2.statusText)
         }
-        const report = await response.json();
-        parsed = JSON.parse(report.report);
-        setLighthouseData(report.report);
-        console.log(parsed);
-        console.log(parsed.categories.seo.score);
-        try {
-          console.log('userId> ' + userId, 'domain> ' + domain,)
-          const response2 = await fetch('http://localhost:8080/api/seoItems', {
-            method: "POST",
-            body: JSON.stringify({
-              userId: userId, domain: response.domain,
-              score: parsed.categories.seo.score, audits: parsed.audits,
-              categoryGroups: parsed.categoryGroups
-            }),
-            headers: {
-              "content-Type": "application/json"
-            }
-          });
-          console.log(response2)
-          if (!response2.ok) {
-            throw new Error(response2.statusText)
-          }
-          const report2 = await response2.json();
-          console.log('report2>' + report2);
-        } catch (err) {
-          console.log(err)
-        }
+        const report2 = await response2.json();
+        console.log('report2>' + report2);
       } catch (err) {
         console.log(err)
       }
-    };
-    runLighthouseAndSendCookies();
-  }, [buttonClicked, domain, userId]);
-  const handlelighthouseClick = () => {
-    setButtonClicked(true);
+    } catch (err) {
+      console.log(err)
+    }
   };
 
 
 
+  useEffect(() => {
+    if (!buttonClicked) {
+      return;
+    }
+    runLighthouseAndSendCookies();
+  }, [buttonClicked, domain, userId]);
+
+  // const handlelighthouseClick = () => {
+  //   setButtonClicked(true);
+  // };
+
   return (
-   <MainUI />
+   <MainUI performance={runLighthouseAndSendCookies} injector={injectFunction} />
   );
 };
 

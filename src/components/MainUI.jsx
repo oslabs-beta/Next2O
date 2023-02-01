@@ -4,7 +4,17 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import logoFill from '../assets/n2o-logo-fill.png';
 
-const MainUI = () => {
+const MainUI = (props) => {
+  console.log(props)
+  const runTreeVisualizer = () => {
+    console.log('click')
+    props.injector()
+  }
+  const runPerformanceAnalysis = () => {
+    props.performance()
+    console.log('performance')
+  }
+
   return (
     <div className='div-container'>
       <div className='div-wrapper'>
@@ -28,7 +38,7 @@ const MainUI = () => {
                 <div className='bot-tab-pop'>
                   <div className='bot-tab-pop-content'>Debugging</div>
                 </div>
-                <div className='bot-tab'><BugReportIcon /></div>
+                <button className='bot-tab' onClick={runTreeVisualizer}><BugReportIcon /></button>
               </div>
             </li>
 
@@ -37,7 +47,7 @@ const MainUI = () => {
                 <div className='bot-tab-pop'>
                   <div className='bot-tab-pop-content'>Performance</div>
                 </div>
-                <div className='bot-tab'><ElectricBoltIcon /></div>
+                <button className='bot-tab' onClick={runPerformanceAnalysis}><ElectricBoltIcon /></button>
               </div>
             </li>
 
