@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { DisplaySeo } from './DisplaySeo';
 import * as d3 from 'd3';
+import '../App.css'
+import MainUI from './MainUI'
 
 export default function App() {
 
@@ -644,18 +646,24 @@ export default function App() {
 
 
   return (
-    <div className="App" style={{ height: '2000px', width: '2000px' }}>
-      <button onClick={injectFunction}>Click me</button>
-      <button onClick={handlelighthouseClick}> Run lighthouse test</button>
-      {/* <button onClick={grabCookiesFromBackground}> click to set cookies</button> */}
-      <p>{url}</p>
-      {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
-      {/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */}
-      <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
-        {nestedObj.name ? 'works' : ''}
-      </div>
-      <div><svg class='chart'></svg></div>
-    </div>
+   <MainUI />
   );
 };
 
+
+{/* <div className="App" style={{ height: '2000px', width: '2000px' }}>
+      <button onClick={injectFunction}>Click me</button>
+      <button onClick={handlelighthouseClick}> Run lighthouse test</button> */}
+
+      {/* <button onClick={grabCookiesFromBackground}> click to set cookies</button> */}
+
+      // <p>{url}</p>
+      // {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
+
+      {/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */}
+
+    //   <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
+    //     {nestedObj.name ? 'works' : ''}
+    //   </div>
+    //   <div><svg class='chart'></svg></div>
+    // </div>
