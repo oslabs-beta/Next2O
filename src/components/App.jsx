@@ -462,10 +462,11 @@ export default function App() {
     <div>
       <MainUI  injector={injectFunction} />
       {/*   performance={runLighthouseAndSendCookies} */}
-      < DisplaySeo/>
-    <div/>
+      
+    </div>
   
-
+)
+}
 
 {/* <div className="App" style={{ height: '2000px', width: '2000px' }}>
       <button onClick={injectFunction}>Click me</button>
@@ -473,11 +474,11 @@ export default function App() {
 
      
 
-    
+{/*     
       <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
       {nestedObj.name ? 'works' : ''}
       </div>
       <div><svg class='chart'></svg></div>
       </div>
     );
-  };
+  }; */}
