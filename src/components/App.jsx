@@ -649,12 +649,12 @@ export default function App() {
 
 
 
-  useEffect(() => {
-    if (!buttonClicked) {
-      return;
-    }
-    runLighthouseAndSendCookies();
-  }, [buttonClicked, domain, userId]);
+  // useEffect(() => {
+  //   if (!buttonClicked) {
+  //     return;
+  //   }
+  //   runLighthouseAndSendCookies();
+  // }, [buttonClicked, domain, userId]);
 
   // const handlelighthouseClick = () => {
   //   setButtonClicked(true);
