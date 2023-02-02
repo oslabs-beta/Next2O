@@ -3,9 +3,9 @@ import React from 'react';
 import App from '../components/App.jsx';
 
 describe('App tests', () => {
-    it('should contains the heading 1', () => {
+    it('should render main UI', () => {
     render(<App />);
-        const heading = screen.getByText(/Error/i);
-        expect(heading).toBeInTheDocument()
+        const debug = screen.getByText(/Debug/i);
+        expect(debug).toBeInTheDocument()
     });
 });

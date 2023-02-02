@@ -13,7 +13,7 @@ export default function App() {
     name: undefined
   })
 
-  const [errorCount, setErrorCount] = useState(0)
+  const [errorList, setErrorList] = useState([])
   // eslint-disable-next-line no-undef
 
   function treeGenerator(data) {
@@ -217,21 +217,28 @@ export default function App() {
     const tree = document.createTreeWalker(root)
     const node = tree.currentNode
     const nodeObj = {}
-
-
-
+    const levels = []
 
     //BFS
-    const queue = [{ domNode: node, context: nodeObj }]
+    const queue = [{ domNode: node, context: nodeObj, level: 1 }]
     while (queue.length > 0) {
       //context aka pointer to layer of object
-      const {domNode, context} = queue.shift();
+      const {domNode, context, level } = queue.shift();
+      console.log(level)
       context.outerHTML = domNode.outerHTML
+      if (level > levels.length) {
+        levels.push([''])
+      } else {
+        levels[level - 1].push('')
+      } 
 
+      const height = level;
+      const width = levels[level - 1].length;
+      context.id = {height: height, width: width}
+      context.width = levels[level - 1].length
       //add keys to object
       if (!context.attributes) context.attributes = {}
       if (!context.name) context.name = ''
-
       // if (domNode.onclick && domNode.onclick !== undefined && domNode.onclick !== null) {
       //   console.log(domNode.onclick)
       //   context.attributes.onclick = domNode.onclick
@@ -290,7 +297,7 @@ export default function App() {
       if (domNode.childNodes !== null && domNode.childNodes.length > 0) {
         for (let i = 0; i < domNode.childNodes.length; i++) {
           context.children ? context.children.push({}) : context.children = [{}]
-          queue.push({ domNode: domNode.childNodes[i], context: context.children[i] })
+          queue.push({ domNode: domNode.childNodes[i], context: context.children[i], level: level + 1 })
         }
       }
     }
@@ -333,8 +340,8 @@ export default function App() {
 
       if (node.nodeName !== pointer.name) {
         pointer.attributes.flagged = true
-        setErrorCount(errorCount + 1)
         pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
+        setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.elementMismatch}])
       }
 
       //check content of current node, compare to browser tree
@@ -343,8 +350,8 @@ export default function App() {
           if (pointer.attributes.content) {
             if (pointer.attributes.content !== node.textContent) {
               pointer.attributes.flagged = true
-              setErrorCount(errorCount + 1)
               pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
+
             }
           }
         }
@@ -366,22 +373,22 @@ export default function App() {
           if (parentElementName === currentElementName || parentElementName === pointer.children[i - offset].name) {
             if (parentElementName !== 'DIV') {
               pointer.attributes.flagged = true
-              setErrorCount(errorCount + 1)
-              pointer.attributes.nestedElements = 'make sure you dont have nested HTML elements'
+              pointer.attributes.nestedElements = 'Make sure you dont have nested HTML elements'
+              setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.nestedElements}])
             }
           }
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
-              setErrorCount(errorCount + 1)
-              pointer.attributes.improperNesting = 'avoid nesting button inside a element'
+              pointer.attributes.improperNesting = 'Avoid nesting <button> inside <a> element.'
+              setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.improperNesting}])
             }
           }
           if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
             if (currentElementName !== 'li' && currentElementName !== 'script' && currentElementName !== 'template') {
               pointer.attributes.flagged = true
-              setErrorCount(errorCount + 1)
-              pointer.attributes.improperListNesting = 'avoid nesting anything other than li, script, or template in a list'
+              pointer.attributes.improperListNesting = 'Avoid nesting anything other than <li>, <script>, or <template> in a list.'
+              setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.improperListNesting}])
             }
           }
           queue.push({ node: childList[i], pointer: pointer.children[i - offset] })
@@ -455,23 +462,16 @@ export default function App() {
   //   }
   // };
 
-<<<<<<< HEAD
-  return (
-   <MainUI errorCount={errorCount} performance={runLighthouseAndSendCookies} injector={injectFunction} />
-  );
-};
-=======
   // useEffect(() => {
   //   if (!buttonClicked) {
   //     return;
   //   }
   //   runLighthouseAndSendCookies();
   // }, [buttonClicked, domain, userId]);
->>>>>>> main
 
   return (
     <div>
-      <MainUI  injector={injectFunction} />
+      <MainUI errors={errorList}  injector={injectFunction} />
       {/*   performance={runLighthouseAndSendCookies} */}
       
     </div>
