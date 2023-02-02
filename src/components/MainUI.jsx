@@ -1,19 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import logoFill from '../assets/n2o-logo-fill.png';
+import DisplaySeo from '../components/DisplaySeo'
+import Tree from '../components/Tree'
 
 const MainUI = (props) => {
+  const [active, setActive] = useState("Tree")
+
   console.log(props)
   const runTreeVisualizer = () => {
     console.log('click')
+    setActive("Tree")
     props.injector()
   }
   const runPerformanceAnalysis = () => {
+    setActive("DisplaySeo")
     props.performance()
     console.log('performance')
   }
+
 
   return (
     <div className='div-container'>
@@ -28,6 +35,9 @@ const MainUI = (props) => {
         </div>
 
         <div className='div-body'>
+          {active === "Tree" && <Tree />}
+          {active === "DisplaySeo" && <DisplaySeo />}
+
         </div>
 
         <div className='div-footer'>
@@ -38,7 +48,7 @@ const MainUI = (props) => {
                 <div className='bot-tab-pop'>
                   <div className='bot-tab-pop-content'>Debugging</div>
                 </div>
-                <button className='bot-tab' onClick={runTreeVisualizer}><BugReportIcon /></button>
+                <div className='bot-tab' onClick={runTreeVisualizer}><BugReportIcon /></div>
               </div>
             </li>
 
@@ -47,7 +57,7 @@ const MainUI = (props) => {
                 <div className='bot-tab-pop'>
                   <div className='bot-tab-pop-content'>Performance</div>
                 </div>
-                <button className='bot-tab' onClick={runPerformanceAnalysis}><ElectricBoltIcon /></button>
+                <div className='bot-tab' onClick={runPerformanceAnalysis}><ElectricBoltIcon /></div>
               </div>
             </li>
 

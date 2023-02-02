@@ -1,15 +1,15 @@
 import React from "react";
 
-export const DisplaySeo = ({lighthouseData}) => {
+const DisplaySeo = ({lighthouseData}) => {
 
-const data = JSON.parse(lighthouseData)
-console.log(data)
+// const data = JSON.parse(lighthouseData)
+// console.log(data)
 
-
-return (
-  <div>
-
-  </div>
-)
-
+  return (
+    <div id="performance-div">
+      Performance
+    </div>
+  )
 };
+
+export default DisplaySeo
