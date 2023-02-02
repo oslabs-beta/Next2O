@@ -9,11 +9,11 @@ import Errors from '../components/Errors'
 
 const MainUI = (props) => {
 
-  const [active, setActive] = useState("")
+  const [active, setActive] = useState('');
 
   const runTreeVisualizer = () => {
     console.log('click')
-    setActive("Tree")
+    setActive('tree')
     props.injector()
   }
   const runPerformanceAnalysis = () => {
@@ -26,16 +26,16 @@ const MainUI = (props) => {
     <div className='div-container'>
       <div className='div-wrapper'>
         <div className='div-header'>
-            <div className='div-img-container'>
-              <img id='logo' src={logoFill} alt="Logo" />
-            </div>
-            <div className='div-icon'>
-              <CloseIcon fontSize='small' className='CloseIcon'/>
-            </div>
+          <div className='div-img-container'>
+            <img id='logo' src={logoFill} alt="Logo" />
+          </div>
+          <div className='div-icon'>
+            <CloseIcon fontSize='small' className='CloseIcon' />
+          </div>
         </div>
 
         <div className='div-body'>
-          {active === "Tree" && <Tree/>}
+          {active === 'tree' && <Tree />}
           {active === "DisplaySeo" && <DisplaySeo />}
           {props.errors ? <p>Errors: {props.errors.length}</p> : ''}
           {props.errors && props.errors.length > 0 ? props.errors.map((el, i) => <Errors key={i + 1} number={i} height={el.id.height} width={el.id.width} msg={el.msg} />) : ''}
@@ -70,7 +70,7 @@ const MainUI = (props) => {
                 <div className='bot-tab'>SEO</div>
               </div>
             </li> */}
-          
+
           </ul>
         </div>
       </div>

@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import  DisplaySeo  from './DisplaySeo';
+import { DisplaySeo } from './DisplaySeo';
 import * as d3 from 'd3';
 import '../App.css'
 import MainUI from './MainUI'
@@ -21,7 +21,7 @@ export default function App() {
     const width = document.body.clientWidth
     const height = document.body.clientHeight
 
-    const margin = { top: 10, right: 120, bottom: 10, left: 40 };
+    const margin = { top: 100, right: 120, bottom: 100, left: 40 };
     const diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x)
     const dx = 30
     const dy = width / 12
@@ -37,8 +37,8 @@ export default function App() {
       if (d.depth) d.children = null;
     });
 
-    const svg = d3.select("svg")
-      .attr("viewBox", [-margin.left, -margin.top, width, dx])
+    const svg = d3.select(".chart")
+      .attr("viewBox", [-margin.left, -margin.top, width, height])
       .style("font", "5px sans-serif")
 
     const gLink = svg.append("g")
@@ -51,7 +51,7 @@ export default function App() {
       .attr("cursor", "pointer")
       .attr("pointer-events", "all");
 
-    var tooltip = d3.select('.App')
+    var tooltip = d3.select('.tree-div')
       .append("div")
       .style("position", "absolute")
       .style('text-align', 'centre')
@@ -90,16 +90,16 @@ export default function App() {
       const node = gNode.selectAll("g")
         .data(nodes, d => d.id)
         .on('mouseover', function (event, d, i) {
-          console.log('d:', d)
-          console.log('event:', event)
           let attr = Object.keys(d.data.attributes)
+          const checkedMismatch = ['elementMismatch', 'textMismatch', 'nestedElements', 'improperNesting', 'improperListNesting']
           let htmlMessage = ''
           if (attr.length === 0) htmlMessage = 'Hydrated successfully'
           else {
             attr.forEach((e) => {
-              if (e !== 'flagged' || e !== 'hydrated') {
+              if (checkedMismatch.includes(e)) {
                 htmlMessage = d.data.attributes[e]
               }
+              else htmlMessage = 'Hydrated successfully'
             })
           }
           var htmlWidth = htmlMessage.length * 5
@@ -332,7 +332,7 @@ export default function App() {
 
       const nodeHTML = node.outerHTML;
       if (nodeHTML !== pointer.outerHTML) {
-        pointer.attributes.flagged = true;
+        // pointer.attributes.flagged = true;
         pointer.attributes.message = 'This element and all child elements underneath it were rendered from the client side. As such, they will not interfere with hydration.'
         continue
       }
@@ -400,24 +400,150 @@ export default function App() {
     return currentTree
   };
 
-  
-  
+  // useEffect(() => {
+  //   const runLighthouseAndSendCookies = async (e) => {
+  //     e.preventDefault();
+  //     chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
+  //       (response) => {
+  //         if(response.error){
+  //           setErrorMessage(response.error);
+  //         }
+  //         setUrl(response.url);
+  //         setDomain(response.domain);
+  //         setUserId(response.userId);
+  //         console.log(domain, userId);
+  //         console.log(response.domain, response.userId);
+  //       });
+  //   };
+  //   runLighthouseAndSendCookies();
+  // }, []); // <-- This will make the effect only run once on mount
+  // useEffect(() => {
+  //   if (domain === '' || userId === '') {
+  //     return;
+  //   }
+  //   const runLighthouse = async () => {
+  //     const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+  //     try {
+  //       let parsed = ''
+  //       const response = await fetch('http://localhost:8080/api/lighthouse', {
+  //         method: 'POST',
+  //         body: JSON.stringify({ url: currentTab[0].url }),
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         }
+  //       });
+  //       if (!response.ok){
+  //         throw new Error(response.statusText)
+  //       }
+  //       const report = await response.json();
+  //       parsed = JSON.parse(report.report);
+  //       console.log(parsed);
+  //       console.log(parsed.categories.seo.score);
+  //       try {
+  //         console.log('userId> '+userId, 'domain> '+domain, )
+  //         const response2 = await fetch('http://localhost:8080/api/seoItems', {
+  //           method: "POST",
+  //           body: JSON.stringify({
+  //             userId: userId, domain: response.url, 
+  //             score: parsed.categories.seo.score, audits: parsed.audits, 
+  //             categoryGroups: parsed.categoryGroups 
+  //           }),
+  //           headers: {
+  //             "content-Type": "application/json"
+  //           }
+  //         });
+  //         console.log(response2)
+  //         if (!response2.ok){
+  //           throw new Error(response2.statusText)
+  //         }
+  //         const report2 = await response2.json();
+  //         console.log(report2);
+  //       } catch (err) {
+  //         console.log(err)
+  //       }
+  //     } catch(err) {
+  //       console.log(err)
+  //     }
+  //   };
+  //   runLighthouse();
+  // })
+  // useEffect(() => {
+  //   const runLighthouseAndSendCookies = async (e) => {
+  //     e.preventDefault();
+  //     chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
+  //       (response) => {
+  //         if(response.error){
+  //           setErrorMessage(response.error);
+  //         }
+
+  //         setUrl(response.url);
+  //         setDomain(response.domain);
+  //         setUserId(response.userId);
+  //         console.log(response.domain, response.userId);
+  //       });
+
+  //     const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+  //     try {
+  //       let parsed = ''
+  //       const response = await fetch('http://localhost:8080/api/lighthouse', {
+  //         method: 'POST',
+  //         body: JSON.stringify({ url: currentTab[0].url }),
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         }
+  //       });
+  //       if (!response.ok){
+  //         throw new Error(response.statusText)
+  //       }
+  //       const report = await response.json();
+  //       parsed = JSON.parse(report.report);
+  //       console.log(parsed);
+  //       console.log(parsed.categories.seo.score);
+  //       try {
+  //         console.log('userId> '+userId, 'domain> '+domain);
+  //         const response2 = await fetch('http://localhost:8080/api/seoItems', {
+  //           method: "POST",
+  //           body: JSON.stringify({
+  //           userId: userId, domain: response.url, 
+  //           score: parsed.categories.seo.score, audits: parsed.audits, 
+  //           categoryGroups: parsed.categoryGroups 
+  //           }),
+  //           headers: {
+  //             "content-Type": "application/json"
+  //           }
+  //         });
+  //         console.log(response2)
+  //         if (!response2.ok){
+  //           throw new Error(response2.statusText)
+  //         }
+  //         const report2 = await response2.json();
+  //         console.log(report2);
+  //       } catch (err) {
+  //         console.log(err)
+  //       }
+  //     } catch(err) {
+  //       console.log(err)
+  //     }
+  //   };
+  //   runLighthouseAndSendCookies();
+  // }, [domain, userId]);
+
   // const runLighthouseAndSendCookies = async (e) => {
-  //   // e.preventDefault();
-  //   chrome.runtime.sendMessage({ message: "get_current_tab_url" },
+  //   e.preventDefault();
+  //   chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
   //     async (response) => {
-  //       if (response.error) {
+  //       if(response.error){
   //         setErrorMessage(response.error);
   //       }
-
-  //       await setUrl(response.url);
-  //       await setDomain(response.domain);
-  //       await setUserId(response.userId);
-  //       console.log(domain, userId);
-  //       console.log(response.domain, response.userId);
+  //       setUrl(response.url);
+  //       setDomain(response.domain);
+  //       setUserId(response.userId);
+  //       await runLighthouse(response.url, userId, domain)
   //     });
+  // };
 
-  //   const currentTab = await chrome.tabs.query({ active: true, currentWindow: true });
+  // const runLighthouse = async(url, userId, domain) => {
+  //   const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
   //   try {
   //     let parsed = ''
   //     const response = await fetch('http://localhost:8080/api/lighthouse', {
@@ -427,47 +553,112 @@ export default function App() {
   //         'Content-Type': 'application/json'
   //       }
   //     });
-  //     if (!response.ok) {
+  //     if (!response.ok){
   //       throw new Error(response.statusText)
   //     }
   //     const report = await response.json();
   //     parsed = JSON.parse(report.report);
-  //     setLighthouseData(report.report);
   //     console.log(parsed);
   //     console.log(parsed.categories.seo.score);
   //     try {
-  //       console.log('userId> ' + userId, 'domain> ' + domain,)
+  //       console.log('userId> '+userId, 'domain> '+domain, )
   //       const response2 = await fetch('http://localhost:8080/api/seoItems', {
   //         method: "POST",
   //         body: JSON.stringify({
-  //           userId: userId, domain: response.domain,
-  //           score: parsed.categories.seo.score, audits: parsed.audits,
-  //           categoryGroups: parsed.categoryGroups
+  //         userId: userId, domain: response.url, 
+  //         score: parsed.categories.seo.score, audits: parsed.audits, 
+  //         categoryGroups: parsed.categoryGroups 
   //         }),
   //         headers: {
   //           "content-Type": "application/json"
   //         }
   //       });
   //       console.log(response2)
-  //       if (!response2.ok) {
+  //       if (!response2.ok){
   //         throw new Error(response2.statusText)
   //       }
   //       const report2 = await response2.json();
-  //       console.log('report2>' + report2);
+  //       console.log(report2);
   //     } catch (err) {
   //       console.log(err)
   //     }
-  //   } catch (err) {
+  //   } catch(err) {
   //     console.log(err)
   //   }
-  // };
+  // }
 
-  // useEffect(() => {
-  //   if (!buttonClicked) {
-  //     return;
-  //   }
-  //   runLighthouseAndSendCookies();
-  // }, [buttonClicked, domain, userId]);
+  const runLighthouseAndSendCookies = async (e) => {
+    // e.preventDefault();
+    chrome.runtime.sendMessage({ message: "get_current_tab_url" },
+      async (response) => {
+        if (response.error) {
+          setErrorMessage(response.error);
+        }
+
+        await setUrl(response.url);
+        await setDomain(response.domain);
+        await setUserId(response.userId);
+        console.log(domain, userId);
+        console.log(response.domain, response.userId);
+      });
+
+    const currentTab = await chrome.tabs.query({ active: true, currentWindow: true });
+    try {
+      let parsed = ''
+      const response = await fetch('http://localhost:8080/api/lighthouse', {
+        method: 'POST',
+        body: JSON.stringify({ url: currentTab[0].url }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText)
+      }
+      const report = await response.json();
+      parsed = JSON.parse(report.report);
+      setLighthouseData(report.report);
+      console.log(parsed);
+      console.log(parsed.categories.seo.score);
+      try {
+        console.log('userId> ' + userId, 'domain> ' + domain,)
+        const response2 = await fetch('http://localhost:8080/api/seoItems', {
+          method: "POST",
+          body: JSON.stringify({
+            userId: userId, domain: response.domain,
+            score: parsed.categories.seo.score, audits: parsed.audits,
+            categoryGroups: parsed.categoryGroups
+          }),
+          headers: {
+            "content-Type": "application/json"
+          }
+        });
+        console.log(response2)
+        if (!response2.ok) {
+          throw new Error(response2.statusText)
+        }
+        const report2 = await response2.json();
+        console.log('report2>' + report2);
+      } catch (err) {
+        console.log(err)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+
+
+  useEffect(() => {
+    if (!buttonClicked) {
+      return;
+    }
+    runLighthouseAndSendCookies();
+  }, [buttonClicked, domain, userId]);
+
+  // const handlelighthouseClick = () => {
+  //   setButtonClicked(true);
+  // };
 
   return (
     <div>
@@ -483,13 +674,15 @@ export default function App() {
       <button onClick={injectFunction}>Click me</button>
       <button onClick={handlelighthouseClick}> Run lighthouse test</button> */}
 
-     
+{/* <button onClick={grabCookiesFromBackground}> click to set cookies</button> */ }
 
-{/*     
-      <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
-      {nestedObj.name ? 'works' : ''}
-      </div>
-      <div><svg class='chart'></svg></div>
-      </div>
-    );
-  }; */}
+// <p>{url}</p>
+// {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
+
+{/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */ }
+
+    //   <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
+    //     {nestedObj.name ? 'works' : ''}
+    //   </div>
+    //   <div><svg class='chart'></svg></div>
+    // </div>
