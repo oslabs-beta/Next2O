@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { DisplaySeo } from './DisplaySeo';
+import  DisplaySeo  from './DisplaySeo';
 import * as d3 from 'd3';
 import '../App.css'
 import MainUI from './MainUI'
@@ -12,12 +12,9 @@ export default function App() {
   const [nestedObj, setNestedObj] = useState({
     name: undefined
   })
-  const [url, setUrl] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [domain, setDomain] = useState('');
-  const [userId, setUserId] = useState('');
-  const [buttonClicked, setButtonClicked] = useState(false);
-  const [lighthouseData, setLighthouseData] = useState({});
+  
+  // const [buttonClicked, setButtonClicked] = useState(false);
+  
   // eslint-disable-next-line no-undef
 
   function treeGenerator(data) {
@@ -392,150 +389,24 @@ export default function App() {
     return currentTree
   };
 
-  // useEffect(() => {
-  //   const runLighthouseAndSendCookies = async (e) => {
-  //     e.preventDefault();
-  //     chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
-  //       (response) => {
-  //         if(response.error){
-  //           setErrorMessage(response.error);
-  //         }
-  //         setUrl(response.url);
-  //         setDomain(response.domain);
-  //         setUserId(response.userId);
-  //         console.log(domain, userId);
-  //         console.log(response.domain, response.userId);
-  //       });
-  //   };
-  //   runLighthouseAndSendCookies();
-  // }, []); // <-- This will make the effect only run once on mount
-  // useEffect(() => {
-  //   if (domain === '' || userId === '') {
-  //     return;
-  //   }
-  //   const runLighthouse = async () => {
-  //     const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
-  //     try {
-  //       let parsed = ''
-  //       const response = await fetch('http://localhost:8080/api/lighthouse', {
-  //         method: 'POST',
-  //         body: JSON.stringify({ url: currentTab[0].url }),
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         }
-  //       });
-  //       if (!response.ok){
-  //         throw new Error(response.statusText)
-  //       }
-  //       const report = await response.json();
-  //       parsed = JSON.parse(report.report);
-  //       console.log(parsed);
-  //       console.log(parsed.categories.seo.score);
-  //       try {
-  //         console.log('userId> '+userId, 'domain> '+domain, )
-  //         const response2 = await fetch('http://localhost:8080/api/seoItems', {
-  //           method: "POST",
-  //           body: JSON.stringify({
-  //             userId: userId, domain: response.url, 
-  //             score: parsed.categories.seo.score, audits: parsed.audits, 
-  //             categoryGroups: parsed.categoryGroups 
-  //           }),
-  //           headers: {
-  //             "content-Type": "application/json"
-  //           }
-  //         });
-  //         console.log(response2)
-  //         if (!response2.ok){
-  //           throw new Error(response2.statusText)
-  //         }
-  //         const report2 = await response2.json();
-  //         console.log(report2);
-  //       } catch (err) {
-  //         console.log(err)
-  //       }
-  //     } catch(err) {
-  //       console.log(err)
-  //     }
-  //   };
-  //   runLighthouse();
-  // })
-  // useEffect(() => {
-  //   const runLighthouseAndSendCookies = async (e) => {
-  //     e.preventDefault();
-  //     chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
-  //       (response) => {
-  //         if(response.error){
-  //           setErrorMessage(response.error);
-  //         }
-
-  //         setUrl(response.url);
-  //         setDomain(response.domain);
-  //         setUserId(response.userId);
-  //         console.log(response.domain, response.userId);
-  //       });
-
-  //     const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
-  //     try {
-  //       let parsed = ''
-  //       const response = await fetch('http://localhost:8080/api/lighthouse', {
-  //         method: 'POST',
-  //         body: JSON.stringify({ url: currentTab[0].url }),
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         }
-  //       });
-  //       if (!response.ok){
-  //         throw new Error(response.statusText)
-  //       }
-  //       const report = await response.json();
-  //       parsed = JSON.parse(report.report);
-  //       console.log(parsed);
-  //       console.log(parsed.categories.seo.score);
-  //       try {
-  //         console.log('userId> '+userId, 'domain> '+domain);
-  //         const response2 = await fetch('http://localhost:8080/api/seoItems', {
-  //           method: "POST",
-  //           body: JSON.stringify({
-  //           userId: userId, domain: response.url, 
-  //           score: parsed.categories.seo.score, audits: parsed.audits, 
-  //           categoryGroups: parsed.categoryGroups 
-  //           }),
-  //           headers: {
-  //             "content-Type": "application/json"
-  //           }
-  //         });
-  //         console.log(response2)
-  //         if (!response2.ok){
-  //           throw new Error(response2.statusText)
-  //         }
-  //         const report2 = await response2.json();
-  //         console.log(report2);
-  //       } catch (err) {
-  //         console.log(err)
-  //       }
-  //     } catch(err) {
-  //       console.log(err)
-  //     }
-  //   };
-  //   runLighthouseAndSendCookies();
-  // }, [domain, userId]);
-
+  
+  
   // const runLighthouseAndSendCookies = async (e) => {
-  //   e.preventDefault();
-  //   chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
+  //   // e.preventDefault();
+  //   chrome.runtime.sendMessage({ message: "get_current_tab_url" },
   //     async (response) => {
-  //       if(response.error){
+  //       if (response.error) {
   //         setErrorMessage(response.error);
   //       }
-  //       setUrl(response.url);
-  //       setDomain(response.domain);
-  //       setUserId(response.userId);
-  //       await runLighthouse(response.url, userId, domain)
-  //     });
-  // };
 
-  // const runLighthouse = async(url, userId, domain) => {
-  //   const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+  //       await setUrl(response.url);
+  //       await setDomain(response.domain);
+  //       await setUserId(response.userId);
+  //       console.log(domain, userId);
+  //       console.log(response.domain, response.userId);
+  //     });
+
+  //   const currentTab = await chrome.tabs.query({ active: true, currentWindow: true });
   //   try {
   //     let parsed = ''
   //     const response = await fetch('http://localhost:8080/api/lighthouse', {
@@ -545,132 +416,68 @@ export default function App() {
   //         'Content-Type': 'application/json'
   //       }
   //     });
-  //     if (!response.ok){
+  //     if (!response.ok) {
   //       throw new Error(response.statusText)
   //     }
   //     const report = await response.json();
   //     parsed = JSON.parse(report.report);
+  //     setLighthouseData(report.report);
   //     console.log(parsed);
   //     console.log(parsed.categories.seo.score);
   //     try {
-  //       console.log('userId> '+userId, 'domain> '+domain, )
+  //       console.log('userId> ' + userId, 'domain> ' + domain,)
   //       const response2 = await fetch('http://localhost:8080/api/seoItems', {
   //         method: "POST",
   //         body: JSON.stringify({
-  //         userId: userId, domain: response.url, 
-  //         score: parsed.categories.seo.score, audits: parsed.audits, 
-  //         categoryGroups: parsed.categoryGroups 
+  //           userId: userId, domain: response.domain,
+  //           score: parsed.categories.seo.score, audits: parsed.audits,
+  //           categoryGroups: parsed.categoryGroups
   //         }),
   //         headers: {
   //           "content-Type": "application/json"
   //         }
   //       });
   //       console.log(response2)
-  //       if (!response2.ok){
+  //       if (!response2.ok) {
   //         throw new Error(response2.statusText)
   //       }
   //       const report2 = await response2.json();
-  //       console.log(report2);
+  //       console.log('report2>' + report2);
   //     } catch (err) {
   //       console.log(err)
   //     }
-  //   } catch(err) {
+  //   } catch (err) {
   //     console.log(err)
   //   }
-  // }
-
-  const runLighthouseAndSendCookies = async (e) => {
-    // e.preventDefault();
-    chrome.runtime.sendMessage({ message: "get_current_tab_url" },
-      async (response) => {
-        if (response.error) {
-          setErrorMessage(response.error);
-        }
-
-        await setUrl(response.url);
-        await setDomain(response.domain);
-        await setUserId(response.userId);
-        console.log(domain, userId);
-        console.log(response.domain, response.userId);
-      });
-
-    const currentTab = await chrome.tabs.query({ active: true, currentWindow: true });
-    try {
-      let parsed = ''
-      const response = await fetch('http://localhost:8080/api/lighthouse', {
-        method: 'POST',
-        body: JSON.stringify({ url: currentTab[0].url }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      if (!response.ok) {
-        throw new Error(response.statusText)
-      }
-      const report = await response.json();
-      parsed = JSON.parse(report.report);
-      setLighthouseData(report.report);
-      console.log(parsed);
-      console.log(parsed.categories.seo.score);
-      try {
-        console.log('userId> ' + userId, 'domain> ' + domain,)
-        const response2 = await fetch('http://localhost:8080/api/seoItems', {
-          method: "POST",
-          body: JSON.stringify({
-            userId: userId, domain: response.domain,
-            score: parsed.categories.seo.score, audits: parsed.audits,
-            categoryGroups: parsed.categoryGroups
-          }),
-          headers: {
-            "content-Type": "application/json"
-          }
-        });
-        console.log(response2)
-        if (!response2.ok) {
-          throw new Error(response2.statusText)
-        }
-        const report2 = await response2.json();
-        console.log('report2>' + report2);
-      } catch (err) {
-        console.log(err)
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  };
-
-
-
-  useEffect(() => {
-    if (!buttonClicked) {
-      return;
-    }
-    runLighthouseAndSendCookies();
-  }, [buttonClicked, domain, userId]);
-
-  // const handlelighthouseClick = () => {
-  //   setButtonClicked(true);
   // };
 
+  // useEffect(() => {
+  //   if (!buttonClicked) {
+  //     return;
+  //   }
+  //   runLighthouseAndSendCookies();
+  // }, [buttonClicked, domain, userId]);
+
   return (
-   <MainUI performance={runLighthouseAndSendCookies} injector={injectFunction} />
-  );
-};
+    <div>
+      <MainUI  injector={injectFunction} />
+      {/*   performance={runLighthouseAndSendCookies} */}
+      < DisplaySeo/>
+    <div/>
+  
 
 
 {/* <div className="App" style={{ height: '2000px', width: '2000px' }}>
       <button onClick={injectFunction}>Click me</button>
       <button onClick={handlelighthouseClick}> Run lighthouse test</button> */}
 
-      {/* <button onClick={grabCookiesFromBackground}> click to set cookies</button> */}
+     
 
-      // <p>{url}</p>
-      // {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
-
-      {/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */}
-
-    //   <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
-    //     {nestedObj.name ? 'works' : ''}
-    //   </div>
-    //   <div><svg class='chart'></svg></div>
-    // </div>
+    
+      <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
+      {nestedObj.name ? 'works' : ''}
+      </div>
+      <div><svg class='chart'></svg></div>
+      </div>
+    );
+  };

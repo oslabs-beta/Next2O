@@ -11,7 +11,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 
-
 // app.use('/api', cookieRouter);
 app.use('/api', lighthouseRouter);
 app.use('/api', databaseRouter);
