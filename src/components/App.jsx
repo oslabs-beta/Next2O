@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { DisplaySeo } from './DisplaySeo';
+import  DisplaySeo  from './DisplaySeo';
 
 export default function App () {
   
@@ -9,12 +9,9 @@ export default function App () {
   const [nestedObj, setNestedObj] = useState({
     name: undefined
   })
-  const [url, setUrl] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [domain, setDomain] = useState('');
-  const [userId, setUserId] = useState('');
-  const [buttonClicked, setButtonClicked] = useState(false);
-  const [lighthouseData, setLighthouseData] = useState({});
+  
+  // const [buttonClicked, setButtonClicked] = useState(false);
+  
   // eslint-disable-next-line no-undef
 
   //inject script to current browser, pull out nested object made from DOM tree
@@ -211,64 +208,9 @@ export default function App () {
   
  
 
-  // const runLighthouseAndSendCookies = async (e) => {
-  //   e.preventDefault();
-  //   chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
-  //     async (response) => {
-  //       if(response.error){
-  //         setErrorMessage(response.error);
-  //       }
-  //       setUrl(response.url);
-  //       setDomain(response.domain);
-  //       setUserId(response.userId);
-  //       await runLighthouse(response.url, userId, domain)
-  //     });
-  // };
   
-  // const runLighthouse = async(url, userId, domain) => {
-  //   const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
-  //   try {
-  //     let parsed = ''
-  //     const response = await fetch('http://localhost:8080/api/lighthouse', {
-  //       method: 'POST',
-  //       body: JSON.stringify({ url: currentTab[0].url }),
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       }
-  //     });
-  //     if (!response.ok){
-  //       throw new Error(response.statusText)
-  //     }
-  //     const report = await response.json();
-  //     parsed = JSON.parse(report.report);
-  //     console.log(parsed);
-  //     console.log(parsed.categories.seo.score);
-  //     try {
-  //       console.log('userId> '+userId, 'domain> '+domain, )
-  //       const response2 = await fetch('http://localhost:8080/api/seoItems', {
-  //         method: "POST",
-  //         body: JSON.stringify({
-  //         userId: userId, domain: response.url, 
-  //         score: parsed.categories.seo.score, audits: parsed.audits, 
-  //         categoryGroups: parsed.categoryGroups 
-  //         }),
-  //         headers: {
-  //           "content-Type": "application/json"
-  //         }
-  //       });
-  //       console.log(response2)
-  //       if (!response2.ok){
-  //         throw new Error(response2.statusText)
-  //       }
-  //       const report2 = await response2.json();
-  //       console.log(report2);
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   } catch(err) {
-  //     console.log(err)
-  //   }
-  // }
+  
+  
 
 // useEffect(() => {
 //   if (!buttonClicked){
@@ -342,84 +284,84 @@ export default function App () {
 //     setButtonClicked(true);
 // };
 
-const runLighthouse = async (e) => {
-  try {
-      e.preventDefault();
-      chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
-      async (response) => {
-        if(response.error){
-          setErrorMessage(response.error);
-        }
-      await setUrl(response.url);
-      await setDomain(response.domain);
-      await setUserId(response.userId);
-      console.log(domain, userId);
-      console.log(response.domain, response.userId);
-      // const lighthouseData = await runLighthouse(response.url);
-      });
-      const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
-      // let parsed = ''
-      const response = await fetch('http://localhost:8080/api/lighthouse', {
-      method: 'POST',
-      body: JSON.stringify({ url : currentTab[0].url}),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-      });
-      if (!response.ok){
-        throw new Error(response.statusText)
-      }
-      const report = await response.json();
-      let parsed = JSON.parse(report.report);
-      console.log(parsed);
-      await setLighthouseData(parsed);
-      //return {lighthouseData};
-      //console.log('lighthouseData> ' + lighthouseData)
-      sendDataToDatabase(parsed);
-  } catch(err) {
-    console.log(err)
-  }
-};
-const sendDataToDatabase = async (parsed) => {
-    try {
-      console.log('in sendData > userId> '+ userId, 'domain> '+ domain);
-      console.log(parsed)
-      console.log(parsed.audits);
-      console.log(parsed.categories);
+// const runLighthouse = async (e) => {
+//   try {
+//       e.preventDefault();
+//       chrome.runtime.sendMessage({ message: "get_current_tab_url" }, 
+//       async (response) => {
+//         if(response.error){
+//           setErrorMessage(response.error);
+//         }
+//       await setUrl(response.url);
+//       await setDomain(response.domain);
+//       await setUserId(response.userId);
+//       console.log(domain, userId);
+//       console.log(response.domain, response.userId);
+//       // const lighthouseData = await runLighthouse(response.url);
+//       });
+//       const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+//       // let parsed = ''
+//       const response = await fetch('http://localhost:8080/api/lighthouse', {
+//       method: 'POST',
+//       body: JSON.stringify({ url : currentTab[0].url}),
+//       headers: {
+//         'Content-Type': 'application/json'
+//       }
+//       });
+//       if (!response.ok){
+//         throw new Error(response.statusText)
+//       }
+//       const report = await response.json();
+//       let parsed = JSON.parse(report.report);
+//       console.log(parsed);
+//       await setLighthouseData(parsed);
+//       //return {lighthouseData};
+//       //console.log('lighthouseData> ' + lighthouseData)
+//       // sendDataToDatabase(parsed);
+//   } catch(err) {
+//     console.log(err)
+//   }
+// };
+// const sendDataToDatabase = async (parsed) => {
+//     try {
+//       console.log('in sendData > userId> '+ userId, 'domain> '+ domain);
+//       console.log(parsed)
+//       console.log(parsed.audits);
+//       console.log(parsed.categories);
       
-      const response = await fetch('http://localhost:8080/api/seoItems', {
-        method: "POST",
-        body: JSON.stringify({
-          userId: userId, 
-          domain: domain, 
-          score: parsed.categories.seo.score, 
-          audits: parsed.audits, 
-          categoryGroups: parsed.categoryGroups 
-        }),
-      headers: {
-        "content-Type": "application/json"
-      }
-      });
-      console.log(response)
-      if (!response.ok){
-        throw new Error(response2.statusText)
-      }
-      const data = await response.json();
-      console.log('data>'+data);
-      } catch (err) {
-        console.log(err)
-      }
-  };
+//       const response = await fetch('http://localhost:8080/api/seoItems', {
+//         method: "POST",
+//         body: JSON.stringify({
+//           userId: userId, 
+//           domain: domain, 
+//           score: parsed.categories.seo.score, 
+//           audits: parsed.audits, 
+//           categoryGroups: parsed.categoryGroups 
+//         }),
+//       headers: {
+//         "content-Type": "application/json"
+//       }
+//       });
+//       console.log(response)
+//       if (!response.ok){
+//         throw new Error(response2.statusText)
+//       }
+//       const data = await response.json();
+//       console.log('data>'+data);
+//       } catch (err) {
+//         console.log(err)
+//       }
+//   };
 
 
   return (
     <div className="App" style={{height: '2000px', width: '2000px'}}>
       <button onClick={injectFunction}>Click me</button>
-      <button onClick={runLighthouse}> Run lighthouse test</button>
+      
       {/* <button onClick={runLighthouseAndSendCookies}> run lighthouse</button> */}
-      <p>{url}</p>
-      {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
-      {/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */}
+     
+      {/* {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>} */}
+      {< DisplaySeo />}
       <div id="treeWrapper" style={{height: '1000px', width: '1000px'}}>
         {nestedObj.name ? 'works' : ''}
       </div>

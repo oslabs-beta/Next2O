@@ -18,7 +18,9 @@
     "scripting",
     "cookies",
     "background",
-    "tabs"
+    "tabs",
+    "identity",
+    "identity.email"
   ]
   
 }

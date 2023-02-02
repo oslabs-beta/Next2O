@@ -5,16 +5,12 @@ const lighthouseController = {};
 
 async function launchChromeAndRunLighthouse(url) {
   const chrome = await chromeLauncher.launch({startingUrl: url, chromeFlags: ['--headless',
-  '--enable-logging', '--disable-gpu','--disable-dev-shm-usage','--no-first-run']})
+  '--enable-logging', '--disable-gpu','--disable-dev-shm-usage']})
     // '--remote-debugging-port=9222', '--ignore-certificate-errors']});
-  const opts = {logLevel: 'info', output: 'json', onlyCategories: ['seo']};
+  const opts = {logLevel: 'info', output: 'json', onlyCategories: ['seo', 'performance']};
   opts.port = chrome.port
   const runnerResult = await lighthouse(url, opts);
-  // console.log('runner result')
-  // console.log(runnerResult)
-  console.log('before chrome')
   await chrome.kill();
-  console.log('after chrome')
   return runnerResult.report
 };
 
