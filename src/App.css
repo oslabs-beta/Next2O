@@ -100,8 +100,20 @@ body {
 .div-body {
   background-color: rgb(241 245 249);
   height: 500px;
+  display: flex;
+  overflow: scroll;
 }
 
+#tree-div {
+  overflow: scroll;
+  display: flex;
+  flex: 1;
+}
+
+#tree-svg {
+  overflow: scroll;
+  flex: 1;
+}
 
 .div-footer {
   text-align: center;
