@@ -21,6 +21,10 @@
   "author": "Emad Kalalipour, Henry Halse, Uma Sowmiyamurthy, Yarden Edry, Wendy Kuo",
   "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.7",
     "body-parser": "^1.20.1",
     "chrome-launcher": "^0.15.1",
     "cookie-parser": "^1.4.6",
