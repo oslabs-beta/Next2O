@@ -3,7 +3,7 @@ import React from 'react'
 const Tree = () => {
   return (
     <div id='tree-div'>
-      Tree
+      <svg class='chart'></svg>
     </div>
   )
 }
