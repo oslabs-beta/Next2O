@@ -39,7 +39,7 @@ export default function DisplaySeo () {
 
   return (
     <div>
-      <button onClick={runLighthouse}> Run lighthouse</button>
+      <button onClick={runLighthouse}>Run lighthouse</button>
       <p>{url && url[0].url}</p>
 
       {lighthouseData.categories ? <p>{lighthouseData.categories.seo.score}</p> : null}
