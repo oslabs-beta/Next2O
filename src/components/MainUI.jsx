@@ -7,12 +7,12 @@ import DisplaySeo from '../components/DisplaySeo'
 import Tree from '../components/Tree'
 
 const MainUI = (props) => {
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState('')
 
   console.log(props)
   const runTreeVisualizer = () => {
     console.log('click')
-    setActive(true)
+    setActive('tree')
     props.injector()
   }
   const runPerformanceAnalysis = () => {
@@ -35,7 +35,7 @@ const MainUI = (props) => {
         </div>
 
         <div className='div-body'>
-          {active && <Tree />}
+          {active === 'tree' && <Tree />}
           {active === "DisplaySeo" && <DisplaySeo />}
 
         </div>

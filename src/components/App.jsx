@@ -329,7 +329,7 @@ export default function App() {
 
       const nodeHTML = node.outerHTML;
       if (nodeHTML !== pointer.outerHTML) {
-        pointer.attributes.flagged = true;
+        // pointer.attributes.flagged = true;
         pointer.attributes.message = 'This element and all child elements underneath it were rendered from the client side. As such, they will not interfere with hydration.'
         continue
       }
