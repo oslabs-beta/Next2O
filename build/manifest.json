@@ -8,7 +8,8 @@
   },
   "action": {
     "default_popup": "index.html",
-    "default_title": "open popup"
+    "default_title": "Next2O debugger",
+    "default_icon": "icon96.png"
   },
   "host_permissions": [
     "<all_urls>"
