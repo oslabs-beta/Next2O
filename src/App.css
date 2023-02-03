@@ -107,12 +107,18 @@ body {
 #tree-div {
   overflow: scroll;
   display: flex;
+  flex-direction: column;
   flex: 1;
 }
 
 #tree-svg {
   overflow: scroll;
-  flex: 1;
+  flex: 0.8;
+}
+
+#tree-error-div {
+  border-top: 1px solid #a0a2a554;
+  flex: 0.2
 }
 
 .div-footer {

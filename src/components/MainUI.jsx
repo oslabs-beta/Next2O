@@ -5,13 +5,11 @@ import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import logoFill from '../assets/n2o-logo-fill.png';
 import DisplaySeo from '../components/DisplaySeo'
 import Tree from '../components/Tree'
-import Errors from '../components/Errors'
 
 const MainUI = (props) => {
   const [active, setActive] = useState("Tree")
 
   const runTreeVisualizer = () => {
-    console.log('click')
     setActive("Tree")
     props.injector()
   }
@@ -34,10 +32,8 @@ const MainUI = (props) => {
         </div>
 
         <div className='div-body'>
-          {active === 'Tree' && <Tree />}
+          {active === 'Tree' && <Tree props = {props.errors}/>}
           {active === "DisplaySeo" && <DisplaySeo />}
-          {props.errors ? <p>Errors: {props.errors.length}</p> : ''}
-          {props.errors && props.errors.length > 0 ? props.errors.map((el, i) => <Errors key={i + 1} number={i} height={el.id.height} width={el.id.width} msg={el.msg} />) : ''}
         </div>
 
         <div className='div-footer'>
