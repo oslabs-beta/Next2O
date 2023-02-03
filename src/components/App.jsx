@@ -334,9 +334,11 @@ export default function App() {
 
       const nodeHTML = node.outerHTML;
       if (nodeHTML !== pointer.outerHTML) {
+        console.log(nodeHTML)
+        console.log(pointer.outerHTML)
         // pointer.attributes.flagged = true;
-        pointer.attributes.message = 'This element and all child elements underneath it were rendered from the client side. As such, they will not interfere with hydration.'
-        continue
+        pointer.attributes.clientSide = 'This element was rendered from the client side. It is most likely in a useEffect hook.'
+        errors.push({id: pointer.id, msg: pointer.attributes.clientSide})
       }
       if (pointer.name === undefined || pointer.name === null) console.log('its not here')
 
@@ -352,9 +354,10 @@ export default function App() {
         if (pointer) {
           if (pointer.attributes.content) {
             if (pointer.attributes.content !== node.textContent) {
+              console.log('mismatch')
               pointer.attributes.flagged = true
               pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
-
+              errors.push({id: pointer.id, msg: pointer.attributes.textMismatch})
             }
           }
         }
