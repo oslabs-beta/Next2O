@@ -13,6 +13,8 @@ export default function App() {
     name: undefined
   })
 
+  const errors = []
+
   const [errorList, setErrorList] = useState([])
   // eslint-disable-next-line no-undef
 
@@ -338,10 +340,11 @@ export default function App() {
       }
       if (pointer.name === undefined || pointer.name === null) console.log('its not here')
 
-      if (node.nodeName !== pointer.name) {
+      
+      if (node.nodeName.toLowerCase() !== pointer.name.toLowerCase()) {
         pointer.attributes.flagged = true
         pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
-        setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.elementMismatch}])
+        errors.push({id: pointer.id, msg: pointer.attributes.elementMismatch})
       }
 
       //check content of current node, compare to browser tree
@@ -374,21 +377,21 @@ export default function App() {
             if (parentElementName !== 'DIV') {
               pointer.attributes.flagged = true
               pointer.attributes.nestedElements = 'Make sure you dont have nested HTML elements'
-              setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.nestedElements}])
+              errors.push({id: pointer.id, msg: pointer.attributes.nestedElements})
             }
           }
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
               pointer.attributes.improperNesting = 'Avoid nesting <button> inside <a> element.'
-              setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.improperNesting}])
+              errors.push({id: pointer.id, msg: pointer.attributes.improperNesting})
             }
           }
           if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
             if (currentElementName !== 'li' && currentElementName !== 'script' && currentElementName !== 'template') {
               pointer.attributes.flagged = true
               pointer.attributes.improperListNesting = 'Avoid nesting anything other than <li>, <script>, or <template> in a list.'
-              setErrorList([...errorList, {id: pointer.id, msg: pointer.attributes.improperListNesting}])
+              errors.push({id: pointer.id, msg: pointer.attributes.improperListNesting})
             }
           }
           queue.push({ node: childList[i], pointer: pointer.children[i - offset] })
@@ -396,6 +399,7 @@ export default function App() {
       }
     }
     console.log(currentTree)
+    setErrorList(errors)
     treeGenerator(currentTree)
     return currentTree
   };
