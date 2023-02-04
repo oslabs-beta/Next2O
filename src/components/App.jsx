@@ -47,11 +47,11 @@ export default function App() {
       .attr("fill", "none")
       .attr("stroke", "#555")
       .attr("stroke-opacity", 0.4)
-      .attr("stroke-width", 1.5);
+      .attr("stroke-width", 1.5)
 
     const gNode = svg.append("g")
       .attr("cursor", "pointer")
-      .attr("pointer-events", "all");
+      .attr("pointer-events", "all")
 
     var tooltip = d3.select('.tree-div')
       .append("div")
@@ -135,7 +135,7 @@ export default function App() {
       nodeEnter.append("circle")
         .attr("r", 2.5)
         .attr("fill", d => d.data.attributes.flagged ? "red" : d._children ? "green" : "gray")
-        .attr("stroke-width", 10);
+        .attr("stroke-width", 10)
 
       nodeEnter.append("text")
         .attr("dy", "0.31em")
@@ -227,7 +227,7 @@ export default function App() {
       //context aka pointer to layer of object
       const {domNode, context, level } = queue.shift();
       console.log(level)
-      context.outerHTML = domNode.outerHTML
+      context.innerHTML = domNode.innerHTML
       if (level > levels.length) {
         levels.push([''])
       } else {
@@ -332,21 +332,22 @@ export default function App() {
 
       const { node, pointer } = queue.shift();
 
-      const nodeHTML = node.outerHTML;
-      if (nodeHTML !== pointer.outerHTML) {
+      const nodeHTML = node.innerHTML;
+      if (nodeHTML !== pointer.innerHTML) {
         console.log(nodeHTML)
-        console.log(pointer.outerHTML)
+        console.log(pointer.innerHTML)
         // pointer.attributes.flagged = true;
         pointer.attributes.clientSide = 'This element was rendered from the client side. It is most likely in a useEffect hook.'
-        errors.push({id: pointer.id, msg: pointer.attributes.clientSide})
+        errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.clientSide})
       }
+  
       if (pointer.name === undefined || pointer.name === null) console.log('its not here')
-
       
+      console.log(pointer.name, node.nodeName)
       if (node.nodeName.toLowerCase() !== pointer.name.toLowerCase()) {
         pointer.attributes.flagged = true
         pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
-        errors.push({id: pointer.id, msg: pointer.attributes.elementMismatch})
+        errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.elementMismatch})
       }
 
       //check content of current node, compare to browser tree
@@ -357,7 +358,7 @@ export default function App() {
               console.log('mismatch')
               pointer.attributes.flagged = true
               pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
-              errors.push({id: pointer.id, msg: pointer.attributes.textMismatch})
+              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.textMismatch})
             }
           }
         }
@@ -372,6 +373,7 @@ export default function App() {
       for (let i = 0; i < childList.length; i++) {
         const currentElementName = childList[i].nodeName
         const parentElementName = node.nodeName
+        if (pointer.children[i - offset] === undefined) continue
         if (childList[i].nodeName !== pointer.children[i - offset].name) {
           offset++
           continue
@@ -380,21 +382,21 @@ export default function App() {
             if (parentElementName !== 'DIV') {
               pointer.attributes.flagged = true
               pointer.attributes.nestedElements = 'Make sure you dont have nested HTML elements'
-              errors.push({id: pointer.id, msg: pointer.attributes.nestedElements})
+              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.nestedElements})
             }
           }
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
               pointer.attributes.improperNesting = 'Avoid nesting <button> inside <a> element.'
-              errors.push({id: pointer.id, msg: pointer.attributes.improperNesting})
+              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting})
             }
           }
           if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
-            if (currentElementName !== 'li' && currentElementName !== 'script' && currentElementName !== 'template') {
+            if (currentElementName.toLowerCase() !== 'li' && currentElementName.toLowerCase() !== 'script' && currentElementName.toLowerCase() !== 'template') {
               pointer.attributes.flagged = true
               pointer.attributes.improperListNesting = 'Avoid nesting anything other than <li>, <script>, or <template> in a list.'
-              errors.push({id: pointer.id, msg: pointer.attributes.improperListNesting})
+              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.improperListNesting})
             }
           }
           queue.push({ node: childList[i], pointer: pointer.children[i - offset] })

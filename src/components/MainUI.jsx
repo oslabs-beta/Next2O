@@ -5,11 +5,13 @@ import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import logoFill from '../assets/n2o-logo-fill.png';
 import DisplaySeo from '../components/DisplaySeo'
 import Tree from '../components/Tree'
+import Errors from '../components/Errors'
 
 const MainUI = (props) => {
   const [active, setActive] = useState("Tree")
 
   const runTreeVisualizer = () => {
+    console.log('click')
     setActive("Tree")
     props.injector()
   }
@@ -32,7 +34,7 @@ const MainUI = (props) => {
         </div>
 
         <div className='div-body'>
-          {active === 'Tree' && <Tree props = {props.errors}/>}
+          {active === 'Tree' && <Tree errors={props.errors} />}
           {active === "DisplaySeo" && <DisplaySeo />}
         </div>
 
