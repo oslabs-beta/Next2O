@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { useEffect } from "react";
 
-export default function DisplaySeo () {
+export default function DisplaySeo (props) {
   const [url, setUrl] = useState('')
   // const [errorMessage, setErrorMessage] = useState(null);
   // const [domain, setDomain] = useState('');
