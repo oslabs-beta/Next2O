@@ -195,6 +195,7 @@ export default function App() {
 
   //inject script to current browser, pull out nested object made from DOM tree
   async function injectFunction() {
+    setErrorList([])
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     chrome.scripting.executeScript({
       target: { tabId: tab.id, allFrames: true },
