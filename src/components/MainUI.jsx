@@ -35,7 +35,7 @@ const MainUI = (props) => {
 
         <div className='div-body'>
           {active === 'Tree' && <Tree errors={props.errors} />}
-          {active === "DisplaySeo" && <DisplaySeo />}
+          {active === "DisplaySeo" && <DisplaySeo info={props.info} />}
         </div>
 
         <div className='div-footer'>

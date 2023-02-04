@@ -34,14 +34,42 @@ export default function DisplaySeo () {
   // useEffect(() => {
   //   //console.log(lighthouseData);
   // }, [lighthouseData]);
+  const sendDataToDatabase = async (e) => {
 
+    e.preventDefault();
+    try {
+      console.log(lighthouseData.categories);
+      console.log(lighthouseData.requestedUrl)
+      const response = await fetch('http://localhost:8080/api/addItems', {
+        method: "POST",
+        body: JSON.stringify({
+          userId: props.info.id, 
+          url: lighthouseData.requestedUrl, 
+          audits: lighthouseData.audits, 
+          categories: lighthouseData.categories,
+          categoryGroups: lighthouseData.categoryGroups 
+        }),
+      headers: {
+        "content-Type": "application/json"
+      }
+      });
+      console.log(response)
+      if (!response.ok){
+        throw new Error(response.statusText)
+      }
+      const data = await response.json();
+      console.log(data);
+      } catch (err) {
+        console.log(err)
+      }
+  };
    console.log(lighthouseData);
 
   return (
     <div>
       <button onClick={runLighthouse}>Run lighthouse</button>
       <p>{url && url[0].url}</p>
-
+      {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save to database</button> : null}
       {lighthouseData.categories ? <p>{lighthouseData.categories.seo.score}</p> : null}
 
     </div>

@@ -3,7 +3,7 @@ const router = express.Router();
 
 const databaseController = require('../controllers/databaseController')
 
-router.post('/seoItems', databaseController.seo, (req, res) => {
+router.post('/seoItems', databaseController.addToSeo, (req, res) => {
   res.status(200).json({seoData: res.locals.seoData})
 });
 
