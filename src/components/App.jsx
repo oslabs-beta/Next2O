@@ -20,6 +20,19 @@ export default function App() {
 
   function treeGenerator(data) {
 
+    function expand(d) {
+      var children = (d.children) ? d.children : d._children;
+      if (d._children) {
+        d.children = d._children;
+        d._children = null;
+      }
+      if (children) children.forEach(expand);
+    }
+
+    function expandAll() {
+      expand(root);
+      update(root);
+    }
     const width = document.body.clientWidth
     const height = document.body.clientHeight
 
@@ -127,10 +140,7 @@ export default function App() {
         .attr("transform", d => `translate(${source.y0},${source.x0})`)
         .attr("fill-opacity", 0)
         .attr("stroke-opacity", 0)
-        .on("click", (event, d) => {
-          d.children = d.children ? null : d._children;
-          update(d);
-        });
+        .on("click", (event, d) => { click(d) });
 
       nodeEnter.append("circle")
         .attr("r", 2.5)
@@ -189,7 +199,19 @@ export default function App() {
       });
     }
 
-    update(root);
+    function click(d) {
+      if (d.children) {
+        d._children = d.children;
+        d.children = null;
+      } else {
+        d.children = d._children;
+        d._children = null;
+      }
+      update(d);
+    }
+
+
+    expandAll(root);
 
   }
 
@@ -226,18 +248,18 @@ export default function App() {
     const queue = [{ domNode: node, context: nodeObj, level: 1 }]
     while (queue.length > 0) {
       //context aka pointer to layer of object
-      const {domNode, context, level } = queue.shift();
+      const { domNode, context, level } = queue.shift();
       console.log(level)
       context.innerHTML = domNode.innerHTML
       if (level > levels.length) {
         levels.push([''])
       } else {
         levels[level - 1].push('')
-      } 
+      }
 
       const height = level;
       const width = levels[level - 1].length;
-      context.id = {height: height, width: width}
+      context.id = { height: height, width: width }
       context.width = levels[level - 1].length
       //add keys to object
       if (!context.attributes) context.attributes = {}
@@ -339,16 +361,16 @@ export default function App() {
         console.log(pointer.innerHTML)
         // pointer.attributes.flagged = true;
         pointer.attributes.clientSide = 'This element was rendered from the client side. It is most likely in a useEffect hook.'
-        errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.clientSide})
+        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.clientSide })
       }
-  
+
       if (pointer.name === undefined || pointer.name === null) console.log('its not here')
-      
+
       console.log(pointer.name, node.nodeName)
       if (node.nodeName.toLowerCase() !== pointer.name.toLowerCase()) {
         pointer.attributes.flagged = true
         pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
-        errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.elementMismatch})
+        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.elementMismatch })
       }
 
       //check content of current node, compare to browser tree
@@ -359,7 +381,7 @@ export default function App() {
               console.log('mismatch')
               pointer.attributes.flagged = true
               pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
-              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.textMismatch})
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.textMismatch })
             }
           }
         }
@@ -383,21 +405,21 @@ export default function App() {
             if (parentElementName !== 'DIV') {
               pointer.attributes.flagged = true
               pointer.attributes.nestedElements = 'Make sure you dont have nested HTML elements'
-              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.nestedElements})
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.nestedElements })
             }
           }
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
               pointer.attributes.improperNesting = 'Avoid nesting <button> inside <a> element.'
-              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting})
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting })
             }
           }
           if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
             if (currentElementName.toLowerCase() !== 'li' && currentElementName.toLowerCase() !== 'script' && currentElementName.toLowerCase() !== 'template') {
               pointer.attributes.flagged = true
               pointer.attributes.improperListNesting = 'Avoid nesting anything other than <li>, <script>, or <template> in a list.'
-              errors.push({type: pointer.name, id: pointer.id, msg: pointer.attributes.improperListNesting})
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperListNesting })
             }
           }
           queue.push({ node: childList[i], pointer: pointer.children[i - offset] })
@@ -632,7 +654,7 @@ export default function App() {
       console.log(parsed.categories.seo.score);
       try {
         console.log('userId> ' + userId, 'domain> ' + domain,)
-        const response2 = await fetch('http://localhost:8080/api/seoItems', {
+        const response2 = await fetch('http://localhost:8080/api/addItems/seoItems', {
           method: "POST",
           body: JSON.stringify({
             userId: userId, domain: response.domain,
@@ -672,12 +694,12 @@ export default function App() {
 
   return (
     <div>
-      <MainUI errors={errorList}  injector={injectFunction} />
+      <MainUI errors={errorList} injector={injectFunction} />
       {/*   performance={runLighthouseAndSendCookies} */}
-      
+
     </div>
-  
-)
+
+  )
 }
 
 {/* <div className="App" style={{ height: '2000px', width: '2000px' }}>
