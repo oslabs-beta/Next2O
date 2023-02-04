@@ -1,4 +1,3 @@
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -8,6 +7,7 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
+
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -101,12 +101,15 @@ body {
   background-color: rgb(241 245 249);
   height: 500px;
   display: flex;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 .chart {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: scroll;
   transform: scale(1);
+  zoom: 2.9;
 }
 
 #errorList {
@@ -125,6 +128,7 @@ body {
   margin: 5px;
   flex: 1;
   border: 1px solid black;
+  overflow-x: scroll;
 }
 
 #tree-svg {
@@ -194,7 +198,7 @@ li {
   border-top: 5px solid #373c46
 }
 
-.bot-tab-wrapper:hover > .bot-tab-pop {
+.bot-tab-wrapper:hover>.bot-tab-pop {
   opacity: 1;
   transform: translateY(-100%)
 }
@@ -216,7 +220,6 @@ li {
   width: 100%;
 }
 
-.bot-tab:hover{
+.bot-tab:hover {
   background-color: rgba(243, 245, 249, 0.5);
 }
-
