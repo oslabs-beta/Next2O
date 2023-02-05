@@ -18,6 +18,7 @@ body {
   }
 } */
 
+
 .div-wrapper {
   box-shadow: 0 30px 50px 0 rgb(44 49 59 / 20%);
   background-color: white;
@@ -79,22 +80,7 @@ body {
  overflow: scroll;
 }
 
-/* .chart {
-  overflow-y: scroll;
-  overflow-x: scroll;
-  transform: scale(1);
-  zoom: 2.9;
-} */
-
-/* #errorList {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-height: 40vh;
-  margin-top: 5px;
-  align-items: center;
-  overflow-y: scroll;
-} */
+/* /// TREE Component /// */
 
 #tree-div {
   overflow: scroll;
@@ -122,6 +108,107 @@ body {
   overflow: scroll;
 }
 
+/* .chart {
+  overflow-y: scroll;
+  overflow-x: scroll;
+  transform: scale(1);
+  zoom: 2.9;
+} */
+
+/* #errorList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 40vh;
+  margin-top: 5px;
+  align-items: center;
+  overflow-y: scroll;
+} */
+
+
+
+/* /// SEO Component /// */
+
+#seo-div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+#seo-wheels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+#seo-val-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+}
+
+#seo-val-and-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+#h2-scores {
+  text-align: center;
+  color: rgb(70, 70, 70);
+}
+
+/* #seo-val-outer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 2px 2px 4px -1px rgba(0, 0, 0, 0.15), -2px -2px 4px -1px rgba(255, 255, 255, 0.7);
+}
+
+#seo-val-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  box-shadow: inset 1.5px 1.5px 2px -1px rgba(0, 0, 0, 0.2),
+              inset -1.5px -1.5px 2px -1px rgba(255, 255, 255, 0.7),
+              -0.3px -0.3px 0px rgba(255, 255, 255, 1),
+              0.3px 0.3px 0px rgba(0, 0, 0, 0.15),
+              0px 4px 3px -3px rgba(0, 0, 0, 0.05);
+} */
+
+/* circle {
+  fill: none;
+  stroke: url(#GradientColor);
+  stroke-width: 13%;
+  stroke-dasharray: 124;
+  stroke-dashoffset: 124;
+  animation: anim 2s linear forwards;
+} */
+
+/* #seo-svg {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* @keyframes anim {
+  100%{
+    stroke-dashoffset: 7.4;
+      stroke-dashoffset: calc(124 - (124 * ( {testVal1} ))) 
+  }
+} */
+
 .div-footer {
   text-align: center;
   position: relative;
@@ -135,14 +222,6 @@ body {
   justify-content: space-around;
   list-style: none;
 }
-
-/* button {
-  height: 100%;
-  width: 100%;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-} */
-
 
 li {
   width: 100%;
