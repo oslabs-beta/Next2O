@@ -70,6 +70,7 @@ export default function DisplaySeo (props) {
    const testVal1 = 94;
    const testVal2 = 50;
    const testVal3 = 22;
+   const avgVal = Math.round((testVal1 + testVal2 + testVal3) / 3)
 
    const filledStyle = {
     backgroundColor: '#3F51B5',
@@ -79,13 +80,24 @@ export default function DisplaySeo (props) {
     trailColor: 'transparent'
   }
 
+   const thinStyle = {
+    textColor: "#3F51B5",
+    pathColor: "#3F51B5",
+  }
+  
+
   return (
     <div id="seo-div">
       <button onClick={runLighthouse}>Run lighthouse</button>
       <p>{url && url[0].url}</p>
       {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save to database</button> : null}
-      
-      <h2 id='h2-scores'>Performance Scores:</h2>
+
+      <h2 id='h2-scores'>Overall Score:</h2>
+      <div id="seo-wheel-total">
+        <CircularProgressbar value={avgVal} text={`${avgVal}`} counterClockwise
+        styles={buildStyles(thinStyle)} />
+      </div>
+
       <div id="seo-wheels">
         <div id="seo-val-and-title">
           <div id="seo-val-wrap">
@@ -111,8 +123,12 @@ export default function DisplaySeo (props) {
             background backgroundPadding={6}
             styles={buildStyles(filledStyle)} />
           </div>
-          <p>Test</p>
+          <p>Network</p>
         </div>
+      </div>
+
+      <div id="seo-bins">
+        <div id="seo-bin-val"></div>
       </div>
     </div>
   )

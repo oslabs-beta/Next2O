@@ -132,10 +132,19 @@ body {
 #seo-div {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
 }
 
+#seo-wheel-total {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 2rem;
+}
+
 #seo-wheels {
+  width: 250px;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
