@@ -1,8 +1,6 @@
-import { fontSize } from "@mui/system";
-import React, {useState} from "react";
-import { useEffect } from "react";
+
+import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 
 export default function DisplaySeo (props) {
   const [url, setUrl] = useState('')
