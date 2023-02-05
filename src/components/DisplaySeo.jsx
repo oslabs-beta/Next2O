@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-export default function DisplaySeo () {
+export default function DisplaySeo (props) {
   const [url, setUrl] = useState('')
   // const [errorMessage, setErrorMessage] = useState(null);
   // const [domain, setDomain] = useState('');
@@ -37,7 +37,35 @@ export default function DisplaySeo () {
   // useEffect(() => {
   //   //console.log(lighthouseData);
   // }, [lighthouseData]);
+  const sendDataToDatabase = async (e) => {
 
+    e.preventDefault();
+    try {
+      console.log(lighthouseData.categories);
+      console.log(lighthouseData.requestedUrl)
+      const response = await fetch('http://localhost:8080/api/addItems', {
+        method: "POST",
+        body: JSON.stringify({
+          userId: props.info.id, 
+          url: lighthouseData.requestedUrl, 
+          audits: lighthouseData.audits, 
+          categories: lighthouseData.categories,
+          categoryGroups: lighthouseData.categoryGroups 
+        }),
+      headers: {
+        "content-Type": "application/json"
+      }
+      });
+      console.log(response)
+      if (!response.ok){
+        throw new Error(response.statusText)
+      }
+      const data = await response.json();
+      console.log(data);
+      } catch (err) {
+        console.log(err)
+      }
+  };
    console.log(lighthouseData);
    const testVal1 = 94;
    const testVal2 = 50;
@@ -55,7 +83,8 @@ export default function DisplaySeo () {
     <div id="seo-div">
       <button onClick={runLighthouse}>Run lighthouse</button>
       <p>{url && url[0].url}</p>
-      {lighthouseData.categories ? <p>{lighthouseData.categories.seo.score}</p> : null}
+      {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save to database</button> : null}
+      
       <h2 id='h2-scores'>Performance Scores:</h2>
       <div id="seo-wheels">
         <div id="seo-val-and-title">
