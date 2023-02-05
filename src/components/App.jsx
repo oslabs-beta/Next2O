@@ -55,6 +55,7 @@ export default function App() {
     const svg = d3.select(".chart")
       .attr("viewBox", [-margin.left, -margin.top, width, height])
       .style("font", "5px sans-serif")
+      .on('mouseover', initZoom)
 
     const gLink = svg.append("g")
       .attr("fill", "none")
@@ -209,8 +210,41 @@ export default function App() {
       }
       update(d);
     }
+    
+    let zoom = d3.zoom().scaleExtent([0.25, 10]).on('zoom', handleZoom)
 
+    function initZoom() {
+      d3.select('.chart').call(zoom)
+    }
 
+    function handleZoom (e) {
+      d3.select('.chart g').attr('transform', e.transform)
+    }
+
+    function zoomIn () {
+      d3.select('.chart').transition().call(zoom.scaleBy, 2)
+    }
+
+    function zoomOut () {
+      d3.select('.chart').transition().call(zoom.scaleBy, 0.5)
+    }
+
+    function resetZoom () {
+      d3.select('.chart').transition().call(zoom.scaleTo, 1)
+    }
+
+    function center () {
+      d3.select('.chart').transition().call(zoom.translateTo, 0.5 * width, 0.5 * height)
+    }
+
+    function panLeft () {
+      d3.select('.chart').transition().call(zoom.translateBy, -50, 0)
+    }
+
+    function panRight () {
+      d3.select('.chart').transition().call(zoom.translateBy, 50, 0)
+    }
+    
     expandAll(root);
 
   }
