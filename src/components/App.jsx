@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { DisplaySeo } from './DisplaySeo';
 import * as d3 from 'd3';
-import '../App.css'
+import '../App.css';
 import MainUI from './MainUI'
 
 export default function App() {
