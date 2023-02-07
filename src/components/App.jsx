@@ -66,12 +66,14 @@ export default function App() {
 
     const gLink = svg.append("g")
       .attr("fill", "none")
+      .attr('id', 'link-g')
       .attr("stroke", "#555")
       .attr("stroke-opacity", 0.4)
       .attr("stroke-width", 1.5)
 
     const gNode = svg.append("g")
       .attr("cursor", "pointer")
+      .attr('id', 'node-g')
       .attr("pointer-events", "all")
 
     svg.call(d3.zoom()
@@ -81,8 +83,9 @@ export default function App() {
     )
 
     function zoomed(e) {
+      console.log(e)
 
-      d3.selectAll('g').attr('transform', `translate(${e.transform.x}, ${e.transform.y}) scale(${e.transform.k})`);
+      d3.selectAll('g').attr('transform', `translate(${20}, ${10}) scale(${3})`);
       update(root)
 
     }
@@ -125,6 +128,7 @@ export default function App() {
 
       const node = gNode.selectAll("g")
         .data(nodes, d => d.id)
+        .attr('id', d => `${d.data.id.height}, ${d.data.id.width}`)
         .on('mouseover', function (event, d, i) {
           let attr = Object.keys(d.data.attributes)
           const checkedMismatch = ['elementMismatch', 'textMismatch', 'nestedElements', 'improperNesting', 'improperListNesting']
