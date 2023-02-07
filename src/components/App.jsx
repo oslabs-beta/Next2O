@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { DisplaySeo } from './DisplaySeo';
 import * as d3 from 'd3';
-import '../App.css'
+import '../App.css';
 import MainUI from './MainUI'
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
-    chrome.identity.getProfileUserInfo({'accountStatus': 'ANY'}, function(info) {
+    chrome.identity.getProfileUserInfo({ 'accountStatus': 'ANY' }, function (info) {
       setUserInfo(info);
     });
   }, []);
@@ -73,6 +73,19 @@ export default function App() {
     const gNode = svg.append("g")
       .attr("cursor", "pointer")
       .attr("pointer-events", "all")
+
+    svg.call(d3.zoom()
+      .scaleExtent([4, Infinity])
+      .extent([[100, 120], [100, 40]])
+      .on('zoom', (event) => zoomed(event))
+    )
+
+    function zoomed(e) {
+
+      d3.selectAll('g').attr('transform', `translate(${e.transform.x}, ${e.transform.y}) scale(${e.transform.k})`);
+      update(root)
+
+    }
 
     var tooltip = d3.select('.tree-div')
       .append("div")
@@ -152,7 +165,7 @@ export default function App() {
 
       nodeEnter.append("circle")
         .attr("r", 2.5)
-        .attr("fill", d => d.data.attributes.flagged ? "red" : d._children ? "green" : "gray")
+        .attr("fill", d => d.data.attributes.flagged ? "red" : "green")
         .attr("stroke-width", 10)
 
       nodeEnter.append("text")
@@ -440,9 +453,9 @@ export default function App() {
     return currentTree
   };
 
- 
 
-  
+
+
 
   return (
     <div>
