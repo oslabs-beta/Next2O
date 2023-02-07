@@ -8,7 +8,7 @@ databaseController.addToSeo = async (req, res, next) => {
     
     const values = [userId, url, audits, categories, categoryGroups];
     const queryString = 'INSERT INTO seo (user_id, url, audits, categories, category_groups) VALUES ($1, $2, $3, $4, $5) RETURNING *'; 
-    console.log('values> '+values)
+    console.log('values> ',values)
     const data = await db.query(queryString, values);
      console.log("data> "+data);
      console.log('data.rows> '+data.rows[0]);

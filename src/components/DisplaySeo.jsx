@@ -1,6 +1,8 @@
-
 import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+
+import '../metrics.css';
 
 export default function DisplaySeo (props) {
   const [url, setUrl] = useState('')
@@ -8,6 +10,11 @@ export default function DisplaySeo (props) {
   // const [domain, setDomain] = useState('');
   // const [userId, setUserId] = useState('');
   const [lighthouseData, setLighthouseData] = useState({});
+  const [speedIndexColor, setSpeedIndexColor] = useState('');
+
+  useEffect(() => {
+    console.log(speedIndexColor);
+  }, [speedIndexColor]);
 
   const runLighthouse = async (e) => {
     try {
@@ -26,6 +33,7 @@ export default function DisplaySeo (props) {
         };
         const report = await response.json();
         let parsed = JSON.parse(report.report);
+        //console.log(parsed.audits['speed-index'].displayValue)
         await setLighthouseData(parsed)
         console.log(parsed);
     } catch(err) {
@@ -33,22 +41,22 @@ export default function DisplaySeo (props) {
     }
   };
   // useEffect(() => {
-  //   //console.log(lighthouseData);
-  // }, [lighthouseData]);
+  //   console.log(lighthouseData.audits['speed-index'].displayValue);
+  // }, [lighthouseData.audits]);
+
   const sendDataToDatabase = async (e) => {
 
     e.preventDefault();
     try {
       console.log(lighthouseData.categories);
       console.log(lighthouseData.requestedUrl)
-      const response = await fetch('http://localhost:8080/api/addItems', {
+      const response = await fetch('http://localhost:8080/api/seoItems', {
         method: "POST",
         body: JSON.stringify({
           userId: props.info.id, 
           url: lighthouseData.requestedUrl, 
           audits: lighthouseData.audits, 
-          categories: lighthouseData.categories,
-          categoryGroups: lighthouseData.categoryGroups 
+          categories: lighthouseData.categories, 
         }),
       headers: {
         "content-Type": "application/json"
@@ -64,7 +72,7 @@ export default function DisplaySeo (props) {
         console.log(err)
       }
   };
-   console.log(lighthouseData);
+   //console.log(lighthouseData.audits['speed-index'].displayValue);
    const testVal1 = 94;
    const testVal2 = 50;
    const testVal3 = 22;
@@ -82,13 +90,55 @@ export default function DisplaySeo (props) {
     textColor: "#3F51B5",
     pathColor: "#3F51B5",
   }
-  
+
+  // useEffect(() => {
+  //   if (lighthouseData && lighthouseData.audits && lighthouseData.audits['speed-index']) {
+
+  //     const speedIndex = lighthouseData.audits['speed-index'].displayValue
+  //     let color = '';
+
+  //     if (speedIndex >= 0 && speedIndex <= 3.4) {
+  //       color = 'green';
+  //       console.log(color);
+  //     } else if (speedIndex > 3.4 && speedIndex <= 5.8) {
+  //       color = 'orange';
+  //       console.log(color);
+  //     } else if (speedIndex > 5.8) {
+  //       color = 'red';
+  //       console.log(color);
+  //     }
+  //     setSpeedIndexColor(color);
+  //     console.log(speedIndexColor)
+  //   }
+  // }, [lighthouseData.audits]);
+
+  // console.log(speedIndexColor);
+
+  const filterOpportunities = () => {
+    let opportunities = [];
+    for (const auditName in lighthouseData.audits) {
+      const audit = lighthouseData.audits[auditName];
+      if (audit.details && audit.details.type === 'opportunity') {
+        opportunities.push({
+          description: audit.description.replace(/\[Learn more\]\(.*\)/, ''),
+          url: (() => {
+            const match = audit.description.match(/\[Learn more\]\((.*)\)/);
+            if (!match) {
+              return null;
+            }
+            return match[1];
+          })()
+        });
+      }
+    }
+    return opportunities;
+  };
 
   return (
     <div id="seo-div">
       <button onClick={runLighthouse}>Run lighthouse</button>
       <p>{url && url[0].url}</p>
-      {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save to database</button> : null}
+      {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save data</button> : null}
 
       <h2 id='h2-scores'>Overall Score:</h2>
       <div id="seo-wheel-total">
@@ -128,13 +178,180 @@ export default function DisplaySeo (props) {
       <div id="seo-bins">
         <div id="seo-bin-val"></div>
       </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
+          <h2>Metrics</h2>
+          <hr />
+          <div>
+            {lighthouseData.audits ? (
+              <div className={`metrics ${(() => {
+                const speedIndex = lighthouseData.audits['speed-index'].displayValue;
+                let color = '';
+                if (speedIndex >= 0 && speedIndex <= 3.4) {
+                  color = 'green';
+                  console.log(color)
+                } else if (speedIndex > 3.4 && speedIndex <= 4) {
+                  color = 'orange';
+                  console.log(color)
+                } else if (speedIndex > 4) {
+                  color = 'red';
+                  console.log(color)
+                }
+                console.log(color)
+                return color;
+                })()}`}
+              >
+               <p>Speed Index: {lighthouseData.audits['speed-index'].displayValue}</p>
+              {lighthouseData.audits['speed-index'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['speed-index'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['speed-index'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p>
+              ) : (
+                <p>{lighthouseData.audits['speed-index'].description}</p>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div>
+            {lighthouseData.audits ? (
+              <div className={`metrics`}>
+                <p> First Contentful Paint: {lighthouseData.audits['first-contentful-paint'].displayValue} </p>
+                {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p>
+              ) : (
+                <p>{lighthouseData.audits['first-contentful-paint'].description}</p>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div>
+            {lighthouseData.audits ? (
+              <div className={`metrics`}>
+                <p> Largest Contentful Paint: {lighthouseData.audits['largest-contentful-paint'].displayValue} </p>
+                {lighthouseData.audits['largest-contentful-paint'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p>
+              ) : (
+                <p>{lighthouseData.audits['largest-contentful-paint'].description}</p>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div>
+            {lighthouseData.audits && lighthouseData.audits['time-to-interactive'] ? (
+              <div className={`metrics`}>
+                <p> Time to Interactive: {lighthouseData.audits['time-to-interactive'].displayValue} </p>
+                {lighthouseData.audits['time-to-interactive'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p>
+              ) : (
+                <p>{lighthouseData.audits['time-to-interactive'].description}</p>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div>
+            {lighthouseData.audits && lighthouseData.audits['cumulative-layout-shift'] ? (
+              <div className={`metrics`}>
+                <p> Cumulative Layout Shift: {lighthouseData.audits['cumulative-layout-shift'].displayValue} </p>
+                {lighthouseData.audits['cumulative-layout-shift'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p>
+              ) : (
+                <p>{lighthouseData.audits['cumulative-layout-shift'].description}</p>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div>
+            {lighthouseData.audits && lighthouseData.audits['total-blocking-time'] ? (
+              <div className={`metrics`}>
+                <p> Total Blocking Time: {lighthouseData.audits['total-blocking-time'].displayValue} </p>
+                {lighthouseData.audits['total-blocking-time'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p>
+              ) : (
+                <p>{lighthouseData.audits['total-blocking-time'].description}</p>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+          <div>
+            {lighthouseData ? (
+              <>
+                <h2>Opportunites</h2>
+                <hr />
+                <div>
+                  {filterOpportunities().map((opportunity, index) => (
+                    <div key={index}>
+                      <p>{opportunity.description}</p>
+                      {opportunity.url && (
+                        <a href={opportunity.url}>Learn more</a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p>No lighthouse data available</p>
+            )}
+          </div>
+
+        </div>
+        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
+          
+        </div>
+      </div>
+     
     </div>
   )
 
 };
 
+{/* <div>
+            {lighthouseData ? (
+              <>
+                {opportunities.map((opportunity, index) => (
+                  <div key={index}>
+                    <p>{opportunity.description}</p>
+                    {opportunity.url && (
+                      <a href={opportunity.url}>Learn more</a>
+                    )}
+                  </div>
+                ))}
+              </>
+            ) : (
+              <p>No lighthouse data available</p>
+            )}
+          </div> */}
 
 /**
+ * 
+ * 
  *  <div id="seo-val-wrap">
           <div id="seo-val-outer">
             <div id="seo-val-inner">{testVal1}</div>
