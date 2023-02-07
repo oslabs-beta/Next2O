@@ -48,15 +48,17 @@ export default function DisplaySeo (props) {
 
     e.preventDefault();
     try {
-      console.log(lighthouseData.categories);
-      console.log(lighthouseData.requestedUrl)
+      // console.log(lighthouseData.categories);
+      // console.log(lighthouseData.requestedUrl)
+      // console.log(lighthouseData.categories.performance.score)
       const response = await fetch('http://localhost:8080/api/seoItems', {
         method: "POST",
         body: JSON.stringify({
           userId: props.info.id, 
           url: lighthouseData.requestedUrl, 
           audits: lighthouseData.audits, 
-          categories: lighthouseData.categories, 
+          seoScore: lighthouseData.categories.seo.score, 
+          performanceScore: lighthouseData.categories.performance.score
         }),
       headers: {
         "content-Type": "application/json"
@@ -68,6 +70,7 @@ export default function DisplaySeo (props) {
       }
       const data = await response.json();
       console.log(data);
+      //console.log(lighthouseData.categories.seo.score, lighthouseData.categories.performance.scroe)
       } catch (err) {
         console.log(err)
       }
@@ -118,25 +121,25 @@ export default function DisplaySeo (props) {
 
   // console.log(speedIndexColor);
 
-  const filterOpportunities = () => {
-    let opportunities = [];
-    for (const auditName in lighthouseData.audits) {
-      const audit = lighthouseData.audits[auditName];
-      if (audit.details && audit.details.type === 'opportunity') {
-        opportunities.push({
-          description: audit.description.replace(/\[Learn more\]\(.*\)/, ''),
-          url: (() => {
-            const match = audit.description.match(/\[Learn more\]\((.*)\)/);
-            if (!match) {
-              return null;
-            }
-            return match[1];
-          })()
-        });
-      }
-    }
-    return opportunities;
-  };
+  // const filterOpportunities = () => {
+  //   let opportunities = [];
+  //   for (const auditName in lighthouseData.audits) {
+  //     const audit = lighthouseData.audits[auditName];
+  //     if (audit.details && audit.details.type === 'opportunity') {
+  //       opportunities.push({
+  //         description: audit.description.replace(/\[Learn more\]\(.*\)/, ''),
+  //         url: (() => {
+  //           const match = audit.description.match(/\[Learn more\]\((.*)\)/);
+  //           if (!match) {
+  //             return null;
+  //           }
+  //           return match[1];
+  //         })()
+  //       });
+  //     }
+  //   }
+  //   return opportunities;
+  // };
 
   return (
     <div id="seo-div">
@@ -144,39 +147,30 @@ export default function DisplaySeo (props) {
       <p>{url && url[0].url}</p>
       {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save data</button> : null}
 
-      <h2 id='h2-scores'>Overall Score:</h2>
+      {/* <h2 id='h2-scores'>Overall Score:</h2>
       <div id="seo-wheel-total">
         <CircularProgressbar value={avgVal} text={`${avgVal}`} counterClockwise
         styles={buildStyles(thinStyle)} />
-      </div>
+      </div> */}
 
       <div id="seo-wheels">
-        <div id="seo-val-and-title">
+      {lighthouseData.categories ? <div id="seo-val-and-title">
           <div id="seo-val-wrap">
-            <CircularProgressbar value={testVal1} text={`${testVal1}`} counterClockwise
+             <CircularProgressbar value={lighthouseData.categories.seo.score * 100} text={`${lighthouseData.categories.seo.score * 100}`} counterClockwise
             background backgroundPadding={6}
-            styles={buildStyles(filledStyle)} />
+            styles={buildStyles(filledStyle)} /> 
           </div>
-          <p>Speed</p>
-        </div>
+          <p>SEO</p> 
+        </div> : null}
 
-        <div id="seo-val-and-title">
+        { lighthouseData.categories ?<div id="seo-val-and-title">
           <div id="seo-val-wrap">
-            <CircularProgressbar value={testVal2} text={`${testVal2}`} counterClockwise
+            <CircularProgressbar value={lighthouseData.categories.performance.score * 100} text={`${lighthouseData.categories.performance.score * 100}`} counterClockwise
             background backgroundPadding={6}
-            styles={buildStyles(filledStyle)} />
+            styles={buildStyles(filledStyle)} /> 
           </div>
-          <p>SEO</p>
-        </div>
-
-        <div id="seo-val-and-title">
-          <div id="seo-val-wrap">
-            <CircularProgressbar value={testVal3} text={`${testVal3}`} counterClockwise
-            background backgroundPadding={6}
-            styles={buildStyles(filledStyle)} />
-          </div>
-          <p>Network</p>
-        </div>
+          <p>Performance</p>
+        </div> : null}
       </div>
 
       <div id="seo-bins">
@@ -186,9 +180,9 @@ export default function DisplaySeo (props) {
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
           <h2>Metrics</h2>
           <hr />
-          <div>
-            {lighthouseData.audits ? (
-              <div className={`metrics ${(() => {
+    <div>
+            
+              {/* <div className={`metrics ${(() => {
                 const speedIndex = lighthouseData.audits['speed-index'].displayValue;
                 let color = '';
                 if (speedIndex >= 0 && speedIndex <= 3.4) {
@@ -204,7 +198,9 @@ export default function DisplaySeo (props) {
                 console.log(color)
                 return color;
                 })()}`}
-              >
+              > */}
+              {lighthouseData.audits ? (
+                <div className={`metrics`}>
                <p>Speed Index: {lighthouseData.audits['speed-index'].displayValue}</p>
               {lighthouseData.audits['speed-index'].description.includes('[Learn more]') ? (
                 <p>
@@ -304,7 +300,7 @@ export default function DisplaySeo (props) {
               <></>
             )}
           </div>
-          <div>
+          {/* <div>
             {lighthouseData ? (
               <>
                 <h2>Opportunites</h2>
@@ -323,10 +319,10 @@ export default function DisplaySeo (props) {
             ) : (
               <p>No lighthouse data available</p>
             )}
-          </div>
+          </div> */}
 
-        </div>
-        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
+        {/* </div>
+        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}> */}
           
         </div>
       </div>
@@ -353,10 +349,8 @@ export default function DisplaySeo (props) {
             )}
           </div> */}
 
-/**
- * 
- * 
- *  <div id="seo-val-wrap">
+
+   {/* <div id="seo-val-wrap">
           <div id="seo-val-outer">
             <div id="seo-val-inner">{testVal1}</div>
           </div>
@@ -370,5 +364,5 @@ export default function DisplaySeo (props) {
             </defs>
             <circle cx="26" cy="26" r="20" stroke-linecap="round" />
           </svg>
-        </div>
- */
+        </div> */}
+
