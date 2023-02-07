@@ -1,6 +1,9 @@
 
 import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+// import Queries from "./Queries";
+import Chart from "./LineChart";
+
 
 export default function DisplaySeo (props) {
   const [url, setUrl] = useState('')
@@ -86,6 +89,9 @@ export default function DisplaySeo (props) {
 
   return (
     <div id="seo-div">
+      {/* <Queries /> */}
+     
+     
       <button onClick={runLighthouse}>Run lighthouse</button>
       <p>{url && url[0].url}</p>
       {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save to database</button> : null}
@@ -128,6 +134,7 @@ export default function DisplaySeo (props) {
       <div id="seo-bins">
         <div id="seo-bin-val"></div>
       </div>
+      <Chart />
     </div>
   )
 
