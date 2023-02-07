@@ -1,2 +1,0 @@
-(()=>{let e;chrome.runtime.onInstalled.addListener((function(){chrome.identity.getProfileUserInfo({accountStatus:"ANY"},(function(n){e=n.email;let o={};console.log(n),o=JSON.stringify(n),console.log(o)}))}))})();
-//# sourceMappingURL=background.js.map

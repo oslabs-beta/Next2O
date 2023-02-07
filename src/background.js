@@ -2,16 +2,16 @@
 
 //fetch if user sync is not enabled by adding "accountStatus" param
 //may need to be inside try block for legacy chrome users - otherwise it returns empy object for non-synced accounts
-let email;
-chrome.runtime.onInstalled.addListener(function () {
-  chrome.identity.getProfileUserInfo({'accountStatus': 'ANY'}, function(info) {
-    email = info.email;
-    let information = {};
-    console.log(info);
-    information=JSON.stringify(info);
-    console.log(information);
-  });
-});
+// let email;
+// chrome.runtime.onInstalled.addListener(function () {
+//   chrome.identity.getProfileUserInfo({'accountStatus': 'ANY'}, function(info) {
+//     email = info.email;
+//     let information = {};
+//     console.log(info);
+//     information=JSON.stringify(info);
+//     console.log(information);
+//   });
+// });
 // chrome.runtime.onMessage.addListener(
 //   (request, sender, sendResponse) => {
 //     if (request.message === "get_current_tab_url") {
