@@ -9,11 +9,11 @@ export default function DisplaySeo (props) {
   // const [domain, setDomain] = useState('');
   // const [userId, setUserId] = useState('');
   const [lighthouseData, setLighthouseData] = useState({});
-  const [speedIndexColor, setSpeedIndexColor] = useState('');
+  //const [speedIndexColor, setSpeedIndexColor] = useState('');
 
-  useEffect(() => {
-    console.log(speedIndexColor);
-  }, [speedIndexColor]);
+  // useEffect(() => {
+  //   console.log(speedIndexColor);
+  // }, [speedIndexColor]);
 
   const runLighthouse = async (e) => {
     try {
@@ -39,9 +39,10 @@ export default function DisplaySeo (props) {
       console.log(err)
     }
   };
+
   // useEffect(() => {
-  //   console.log(lighthouseData.audits['speed-index'].displayValue);
-  // }, [lighthouseData.audits]);
+  //   // console.log(lighthouseData.audits['speed-index'].displayValue);
+  // }, [lighthouseData]);
 
   const sendDataToDatabase = async (e) => {
 
@@ -71,7 +72,11 @@ export default function DisplaySeo (props) {
         console.log(err)
       }
   };
-   //console.log(lighthouseData.audits['speed-index'].displayValue);
+   // tip: be midnful of the fact that after running lighthouse it'd take lighthouseData
+   // some time to populate, so using seoScore or performanceScore would work best with
+   // conditional rendering 
+  //  const seoScore = lighthouseData.categories.performance.id.score;
+  //  const performanceScore = lighthouseData.categories.performance.id.score;
    const testVal1 = 94;
    const testVal2 = 50;
    const testVal3 = 22;
