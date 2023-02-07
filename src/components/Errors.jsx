@@ -12,8 +12,9 @@ const Errors = (props) => {
     console.log(svg.scrollHeight)
     console.log(node.getBoundingClientRect())
   }
+
   return (
-    <div style={{boxShadow: '2px 2px 2px 2px gainsboro', margin: '5px', padding: '10px'}}>
+    <div style={{ boxShadow: '2px 2px 2px 2px gainsboro', margin: '5px', padding: '5px' }}>
       <p><strong>Error number:</strong> {props.number + 1}</p>
       <p><strong>Node type: </strong> {props.type}</p>
       <p><strong>Location:</strong> Height: {props.height} Width: {props.width}</p>
