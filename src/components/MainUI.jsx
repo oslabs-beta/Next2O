@@ -10,6 +10,7 @@ import Errors from '../components/Errors'
 
 const MainUI = (props) => {
   const [active, setActive] = useState("Tree")
+ 
 
   const runTreeVisualizer = () => {
     console.log('click')

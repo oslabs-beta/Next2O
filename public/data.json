@@ -1,0 +1,27 @@
+{ "data" : [{
+    "date": "A",
+    "score": 90,
+    "performance": 50
+},
+{
+    "date": "B",
+    "score": 50,
+    "performance": 30
+},
+{
+    "date": "C",
+    "score": 80,
+    "performance": 60
+},
+{
+    "date": "D",
+    "score": 20,
+    "performance": 80
+},
+{
+    "date": "E",
+    "score": 30,
+    "performance": 45
+}
+]
+}
