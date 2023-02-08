@@ -85,6 +85,7 @@ body {
 #tree-div {
   overflow: scroll;
   display: flex;
+  height: 100%;
   flex-direction: column;
   flex: 1;
   /* border-bottom: 2px solid #3f51b53e;
@@ -103,7 +104,11 @@ body {
 
 #tree-error-div {
   border-top: 1px solid #a0a2a554;
+<<<<<<< HEAD
+  height: 100%;
+=======
   flex: 0.3;
+>>>>>>> main
   overflow: scroll;
 }
 
