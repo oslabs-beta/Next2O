@@ -7,9 +7,6 @@ import '../metrics.css';
 
 export default function DisplaySeo (props) {
   const [url, setUrl] = useState('')
-  // const [errorMessage, setErrorMessage] = useState(null);
-  // const [domain, setDomain] = useState('');
-  // const [userId, setUserId] = useState('');
   const [lighthouseData, setLighthouseData] = useState({});
   const [debounce, setDebounce] = useState(false)
 
@@ -49,9 +46,7 @@ export default function DisplaySeo (props) {
 
     e.preventDefault();
     try {
-      // console.log(lighthouseData.categories);
-      // console.log(lighthouseData.requestedUrl)
-      // console.log(lighthouseData.categories.performance.score)
+      
       const response = await fetch('http://localhost:8080/api/seoItems', {
         method: "POST",
         body: JSON.stringify({
