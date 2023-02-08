@@ -72,23 +72,44 @@ export default function App() {
       .attr("stroke-width", 1.5)
 
     const gNode = svg.append("g")
-      .attr("cursor", "pointer")
       .attr('id', 'node-g')
       .attr("pointer-events", "all")
 
-    svg.call(d3.zoom()
-      .scaleExtent([30, Infinity])
-      .extent([[80, 120], [100, 40]])
-      .on('zoom', (event) => zoomed(event))
-    )
+      let transform;
 
-    function zoomed(e) {
-      console.log(e)
+  const zoom = d3.zoom().on("zoom", e => {
+    gNode.attr("transform", (transform = e.transform));
+    gNode.style("stroke-width", 3 / Math.sqrt(transform.k));
+    gLink.attr("transform", (transform = e.transform));
+    gLink.style("stroke-width", 3 / Math.sqrt(transform.k));
+    // points.attr("r", 3 / Math.sqrt(transform.k));
+  });
+  
+    svg.call(zoom)
+    .call(zoom.transform, d3.zoomIdentity)
+    .on("pointermove", event => {
+      const p = transform.invert(d3.pointer(event));
+      // const i = delaunay.find(...p);
+      // points.classed("highlighted", (_, j) => i === j);
+      // d3.select(points.nodes()[i]).raise();
+    })
+    .node();
 
-      d3.selectAll('g').attr('transform', `translate(${20}, ${10}) scale(${3})`);
-      update(root)
+    // svg.call(d3.zoom()
+    //   .scaleExtent([30, Infinity])
+    //   .extent([[80, 120], [100, 40]])
+    //   .on('zoom', (event) => zoomed(event))
+    // )
 
-    }
+    
+
+    // function zoomed(e) {
+    //   console.log(e)
+
+    //   d3.selectAll('g').attr('transform', `translate(${e.sourceEvent.x}, ${e.sourceEvent.y}) scale(${e.transform.k + 1})`);
+    //   update(root)
+
+    // }
 
     var tooltip = d3.select('#tree-div')
       .append("div")
@@ -128,8 +149,9 @@ export default function App() {
 
       const node = gNode.selectAll("g")
         .data(nodes, d => d.id)
-        .attr('id', d => `${d.data.id.height}, ${d.data.id.width}`)
-        .on('mouseover', function (event, d, i) {
+        // .attr('id', d => `${d.data.id.height}, ${d.data.id.width}`)
+        .on('mouseenter', function (event, d, i) {
+          console.log('hey')
           let attr = Object.keys(d.data.attributes)
           const checkedMismatch = ['elementMismatch', 'textMismatch', 'nestedElements', 'improperNesting', 'improperListNesting']
           let htmlMessage = ''
@@ -148,9 +170,9 @@ export default function App() {
             .duration(1000)
             .style('visibility', 'visible')
             .style('opacity', .9)
-            .style("left", event.pageX + "px")
-            .style("top", event.pageY + "px")
-            .style('width', `${htmlWidth}px`)
+            .style("left", (event.pageX - 75) + "px")
+            .style("top", (event.pageY - 75) + "px")
+            .style('width', `${htmlWidth - 20}px`)
             .style('height', '28px');
           tooltip.html(htmlMessage)
         })
@@ -162,8 +184,9 @@ export default function App() {
         })
 
       const nodeEnter = node.enter().append("g")
-        .attr("transform", d => `translate(${source.y0},${source.x0})`)
+        .attr("transform", d => `translate(${source.y0},${source.x0}) scale(1, 1)`)
         .attr("fill-opacity", 0)
+        .attr('id', (d) => `${d.data.id.height}, ${d.data.id.width}`)
         .attr("stroke-opacity", 0)
         .on("click", (event, d) => { click(d) });
 
@@ -436,7 +459,7 @@ export default function App() {
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
-              pointer.attributes.improperNesting = 'Avoid nesting <button> inside <a> element.'
+              pointer.attributes.improperNesting = 'Avoid nesting < button > inside < a > element.'
               errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting })
             }
           }
