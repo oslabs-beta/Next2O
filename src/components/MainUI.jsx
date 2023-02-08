@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
@@ -24,6 +24,10 @@ const MainUI = (props) => {
     console.log('performance')
   }
 
+  useEffect(() => {
+    runTreeVisualizer()
+  }, [])
+
   return (
     <div className='div-container'>
       <div className='div-wrapper'>
@@ -32,7 +36,7 @@ const MainUI = (props) => {
             <img id='logo' src={logoFill} alt="Logo" />
           </div>
           <div className='div-icon'>
-            <CloseIcon fontSize='small' className='CloseIcon' />
+            <CloseIcon fontSize='small' className='CloseIcon'/>
           </div>
         </div>
 

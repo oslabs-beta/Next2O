@@ -77,7 +77,7 @@ body {
   background-color: rgb(241 245 249);
   height: 500px;
   display: flex;
- overflow: scroll;
+  flex-direction: column;
 }
 
 /* /// TREE Component /// */
@@ -85,6 +85,7 @@ body {
 #tree-div {
   overflow: scroll;
   display: flex;
+  height: 100%;
   flex-direction: column;
   flex: 1;
   /* border-bottom: 2px solid #3f51b53e;
@@ -95,18 +96,25 @@ body {
 #tree-svg {
     /* border-bottom: 2px solid #3f51b53e; */
   /* box-shadow: 2px 2px 2px 2px #3f51b53e; */
-  border: 1px solid gainsboro;
-  border-radius: 2px;
-  margin-bottom: 1rem;
+  /* border: 1px solid gainsboro;
+  border-radius: 2px; */
   overflow: scroll;
-  flex: 0.6;
+  flex: 0.7;
 }
 
 #tree-error-div {
   border-top: 1px solid #a0a2a554;
-  flex: 0.4;
+  flex: 0.3;
   overflow: scroll;
 }
+
+#error-div-inner {
+  box-shadow: 2px 2px 2px 2px gainsboro;
+  padding: 5px;
+  margin: 5px;
+  background-color: white;
+}
+
 
 /* .chart {
   overflow-y: scroll;
@@ -132,18 +140,50 @@ body {
 #seo-div {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 100%;
+  height: 500px;
+  overflow: scroll;
 }
 
-#seo-wheel-total {
+#run-LH-btn {
+    opacity: 80%;
+    background-image: linear-gradient(to right, #1A2980 0%, #26D0CE  51%, #1A2980  100%);
+    margin-top: 175px;
+    margin-bottom: 20px;
+    padding: 45px 45px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    font-weight: bold;   
+    font-size: 14px;         
+    box-shadow: 0 0 20px #eee;
+    border-radius: 7px;
+    border-color: transparent;
+    display: block;
+    cursor: pointer;
+    align-items: center;
+    display: flex;
+  }
+
+  #run-LH-btn:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+  }
+ 
+
+/* #seo-wheel-total {
   width: 150px;
   height: 150px;
   margin-bottom: 2rem;
-}
+} */
 
 #seo-wheels {
+  margin-top: 12px;
+  margin-bottom: 12px;
   width: 250px;
   display: flex;
   flex-direction: row;
@@ -154,8 +194,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
 }
 
 #seo-val-and-title {
@@ -164,6 +204,7 @@ body {
   justify-content: center;
   align-items: center;
   font-weight: bold;
+  font-size: 14px;
 }
 
 #h2-scores {
@@ -171,57 +212,75 @@ body {
   color: rgb(70, 70, 70);
 }
 
-/* #seo-val-outer {
+#seo-bins {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  box-shadow: 2px 2px 4px -1px rgba(0, 0, 0, 0.15), -2px -2px 4px -1px rgba(255, 255, 255, 0.7);
+  margin-top: 20px;
 }
 
-#seo-val-inner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 70%;
-  height: 70%;
-  border-radius: 50%;
-  box-shadow: inset 1.5px 1.5px 2px -1px rgba(0, 0, 0, 0.2),
-              inset -1.5px -1.5px 2px -1px rgba(255, 255, 255, 0.7),
-              -0.3px -0.3px 0px rgba(255, 255, 255, 1),
-              0.3px 0.3px 0px rgba(0, 0, 0, 0.15),
-              0px 4px 3px -3px rgba(0, 0, 0, 0.05);
-} */
+#seo-metrics-box {
+  padding: 10px;
+  margin: 3px 10px 8px 10px;
+  background-color: white;
+}
 
-/* circle {
-  fill: none;
-  stroke: url(#GradientColor);
-  stroke-width: 13%;
-  stroke-dasharray: 124;
-  stroke-dashoffset: 124;
-  animation: anim 2s linear forwards;
-} */
+#metrics-value {
+  color: red;
+}
 
-/* #seo-svg {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
+#metrics-desc-div {
+  padding-top: 3px;
+  max-width: 70%;
+}
 
-/* @keyframes anim {
-  100%{
-    stroke-dashoffset: 7.4;
-      stroke-dashoffset: calc(124 - (124 * ( {testVal1} ))) 
-  }
-} */
+#opportunities-div {
+  padding: 8px;
+}
+
+#opp-div-each {
+  margin-bottom: 7px;
+  padding: 5px;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+}
+
+#save-data-btn {
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 13px;
+  line-height: 29px;
+  padding: 0 10px 0 11px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 100px;
+  margin-bottom: 15px;
+}
+
+#save-data-btn:hover {
+  background-color: #f7fafa;
+}
+
+
+
+/* /// UI Bottom Portion /// */
 
 .div-footer {
   text-align: center;
   position: relative;
   height: 50px;
+  box-shadow:  0 -4px 8px -6px rgba(0,0,0,0.4);
 }
 
 .ul-bot-nav {
@@ -291,4 +350,12 @@ li {
 
 .bot-tab:hover {
   background-color: rgba(243, 245, 249, 0.5);
+}
+
+p {
+  display: block;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }

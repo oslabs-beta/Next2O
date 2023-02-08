@@ -1,9 +1,10 @@
-
+import { fontWeight } from "@mui/system";
 import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 // import Queries from "./Queries";
 // import Chart from "./LineChart";
 import SeoHistory from "./SeoHistory"
+import 'react-circular-progressbar/dist/styles.css';
 
 import '../metrics.css';
 
@@ -13,17 +14,19 @@ export default function DisplaySeo (props) {
   // const [domain, setDomain] = useState('');
   // const [userId, setUserId] = useState('');
   const [lighthouseData, setLighthouseData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+
   //const [speedIndexColor, setSpeedIndexColor] = useState('');
 
   // useEffect(() => {
   //   console.log(speedIndexColor);
   // }, [speedIndexColor]);
+  const [debounce, setDebounce] = useState(false)
 
   const runLighthouse = async (e) => {
+    if (debounce === true) return
+    setDebounce(true)
     try {
         e.preventDefault();
-        setIsLoading(true)
         const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
         setUrl(currentTab);
         const response = await fetch('http://localhost:8080/api/lighthouse', {
@@ -37,10 +40,11 @@ export default function DisplaySeo (props) {
           throw new Error(response.statusText)
         };
         const report = await response.json();
-        // let parsed = JSON.parse(report.report);
+        let parsed = JSON.parse(report.report);
         //console.log(parsed.audits['speed-index'].displayValue)
-        await setLighthouseData(report.report)
-        setIsLoading(false)
+        await setLighthouseData(parsed)
+        setDebounce(false)
+        
         // console.log(parsed);
     } catch(err) {
       console.log(err)
@@ -85,12 +89,6 @@ export default function DisplaySeo (props) {
    // tip: be midnful of the fact that after running lighthouse it'd take lighthouseData
    // some time to populate, so using seoScore or performanceScore would work best with
    // conditional rendering 
-  //  const seoScore = lighthouseData.categories.performance.id.score;
-  //  const performanceScore = lighthouseData.categories.performance.id.score;
-   const testVal1 = 94;
-   const testVal2 = 50;
-   const testVal3 = 22;
-   const avgVal = Math.round((testVal1 + testVal2 + testVal3) / 3)
 
    const filledStyle = {
     backgroundColor: '#3F51B5',
@@ -103,7 +101,9 @@ export default function DisplaySeo (props) {
    const thinStyle = {
     textColor: "#3F51B5",
     pathColor: "#3F51B5",
+    textSize: "24px",
   }
+  
 
   // useEffect(() => {
   //   if (lighthouseData && lighthouseData.audits && lighthouseData.audits['speed-index']) {
@@ -128,71 +128,83 @@ export default function DisplaySeo (props) {
 
   // console.log(speedIndexColor);
 
-  // const filterOpportunities = () => {
-  //   let opportunities = [];
-  //   for (const auditName in lighthouseData.audits) {
-  //     const audit = lighthouseData.audits[auditName];
-  //     if (audit.details && audit.details.type === 'opportunity') {
-  //       opportunities.push({
-  //         description: audit.description.replace(/\[Learn more\]\(.*\)/, ''),
-  //         url: (() => {
-  //           const match = audit.description.match(/\[Learn more\]\((.*)\)/);
-  //           if (!match) {
-  //             return null;
-  //           }
-  //           return match[1];
-  //         })()
-  //       });
-  //     }
-  //   }
-  //   return opportunities;
-  // };
+  const filterOpportunities = () => {
+    let opportunities = [];
+    for (const auditName in lighthouseData.audits) {
+      const audit = lighthouseData.audits[auditName];
+      if (audit.details && audit.details.type === 'opportunity') {
+        opportunities.push({
+          description: audit.description.replace(/\[Learn more\]\(.*\)/, ''),
+          url: (() => {
+            const match = audit.description.match(/\[Learn more\]\((.*)\)/);
+            if (!match) {
+              return null;
+            }
+            return match[1];
+          })()
+        });
+      }
+    }
+    return opportunities;
+  };
+
 
   return (
     <div id="seo-div">
-      {/* <Queries /> */}
-     
-     
-      <button onClick={runLighthouse}>Run lighthouse</button>
-      {isLoading && <p>loading...</p>}
-      <p>{url && url[0].url}</p>
-      {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save data</button> : null}
 
+  { !lighthouseData || !lighthouseData.categories ? 
+      <div>
+        <button id="run-LH-btn" onClick={runLighthouse}>Run Analysis</button>
+
+      </div>
+      : 
+      <>
       {/* <h2 id='h2-scores'>Overall Score:</h2>
       <div id="seo-wheel-total">
         <CircularProgressbar value={avgVal} text={`${avgVal}`} counterClockwise
         styles={buildStyles(thinStyle)} />
-      </div> */}
+      </div>  */}
+      <h1 style={{margin: '20px', color: 'rgb(70, 70, 70)'}}>Metrics</h1>
 
       <div id="seo-wheels">
       {lighthouseData.categories ? <div id="seo-val-and-title">
           <div id="seo-val-wrap">
-             <CircularProgressbar value={lighthouseData.categories.seo.score * 100} text={`${lighthouseData.categories.seo.score * 100}`} counterClockwise
+             <CircularProgressbar value={Math.round(lighthouseData.categories.seo.score * 100)} text={`${Math.round(lighthouseData.categories.seo.score * 100)}`} counterClockwise
             background backgroundPadding={6}
             styles={buildStyles(filledStyle)} /> 
           </div>
-          <p>SEO</p> 
+          <p style={{ padding: '5px' }}>SEO</p> 
         </div> : null}
 
         { lighthouseData.categories ?<div id="seo-val-and-title">
           <div id="seo-val-wrap">
-            <CircularProgressbar value={lighthouseData.categories.performance.score * 100} text={`${lighthouseData.categories.performance.score * 100}`} counterClockwise
+            <CircularProgressbar value={Math.round(lighthouseData.categories.performance.score * 100)} text={`${Math.round(lighthouseData.categories.performance.score * 100)}`} counterClockwise
             background backgroundPadding={6}
             styles={buildStyles(filledStyle)} /> 
           </div>
-          <p>Performance</p>
+          <p style={{ padding: '5px' }}>Performance</p>
         </div> : null}
       </div>
 
-      <div id="seo-bins">
-        <div id="seo-bin-val"></div>
-      </div>
-      <SeoHistory />
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+      {/* <div id="seo-bins">
+        <h2 style={{color: 'rgb(70, 70, 70)'}}>Metrics</h2>
+        <div id="seo-bin-values">
+
+      
+          {/* <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
+            <p><strong>Heading</strong></p>
+            <div id="metrics-desc-div">Description Lorem ipsum dolor sit amet consectetur </div>
+          </div> */}
+
+        {/* </div>
+      </div> */}
+
+      
+      {/* <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
-          <h2>Metrics</h2>
-          <hr />
-    <div>
+           */}
+
             
               {/* <div className={`metrics ${(() => {
                 const speedIndex = lighthouseData.audits['speed-index'].displayValue;
@@ -211,170 +223,147 @@ export default function DisplaySeo (props) {
                 return color;
                 })()}`}
               > */}
+
+          <div>
               {lighthouseData.audits ? (
-                <div className={`metrics`}>
-               <p>Speed Index: {lighthouseData.audits['speed-index'].displayValue}</p>
+              <div id="seo-metrics-box">
+                <p><strong>Speed Index: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['speed-index'].displayValue}</p>
               {lighthouseData.audits['speed-index'].description.includes('[Learn more]') ? (
-                <p>
+                <div id="metrics-desc-div">
                   {lighthouseData.audits['speed-index'].description.split('[Learn more](')[0]}
                   <a href={lighthouseData.audits['speed-index'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
+                </div>
               ) : (
-                <p>{lighthouseData.audits['speed-index'].description}</p>
+                <div>{lighthouseData.audits['speed-index'].description}</div>
               )}
               </div>
             ) : (
               <></>
             )}
           </div>
+
           <div>
-            {lighthouseData.audits ? (
-              <div className={`metrics`}>
-                <p> First Contentful Paint: {lighthouseData.audits['first-contentful-paint'].displayValue} </p>
-                {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
-                <p>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>First Contentful Paint: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['first-contentful-paint'].displayValue}</p>
+              {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
                   {lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[0]}
                   <a href={lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
+                </div>
               ) : (
-                <p>{lighthouseData.audits['first-contentful-paint'].description}</p>
+                <div>{lighthouseData.audits['first-contentful-paint'].description}</div>
               )}
               </div>
             ) : (
               <></>
             )}
           </div>
+
           <div>
-            {lighthouseData.audits ? (
-              <div className={`metrics`}>
-                <p> Largest Contentful Paint: {lighthouseData.audits['largest-contentful-paint'].displayValue} </p>
-                {lighthouseData.audits['largest-contentful-paint'].description.includes('[Learn more]') ? (
-                <p>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>Largest Contentful Paint: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['largest-contentful-paint'].displayValue}</p>
+              {lighthouseData.audits['largest-contentful-paint'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
                   {lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[0]}
                   <a href={lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
+                </div>
               ) : (
-                <p>{lighthouseData.audits['largest-contentful-paint'].description}</p>
+                <div>{lighthouseData.audits['largest-contentful-paint'].description}</div>
               )}
               </div>
             ) : (
               <></>
             )}
           </div>
+
           <div>
-            {lighthouseData.audits && lighthouseData.audits['time-to-interactive'] ? (
-              <div className={`metrics`}>
-                <p> Time to Interactive: {lighthouseData.audits['time-to-interactive'].displayValue} </p>
-                {lighthouseData.audits['time-to-interactive'].description.includes('[Learn more]') ? (
-                <p>
+              {lighthouseData.audits && lighthouseData.audits["time-to-interactive"] ? (
+              <div id="seo-metrics-box">
+                <p><strong>Time to Interactive: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['time-to-interactive'].displayValue}</p>
+              {lighthouseData.audits['time-to-interactive'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
                   {lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[0]}
                   <a href={lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
+                </div>
               ) : (
-                <p>{lighthouseData.audits['time-to-interactive'].description}</p>
+                <div>{lighthouseData.audits['time-to-interactive'].description}</div>
               )}
               </div>
             ) : (
               <></>
             )}
           </div>
+
           <div>
-            {lighthouseData.audits && lighthouseData.audits['cumulative-layout-shift'] ? (
-              <div className={`metrics`}>
-                <p> Cumulative Layout Shift: {lighthouseData.audits['cumulative-layout-shift'].displayValue} </p>
-                {lighthouseData.audits['cumulative-layout-shift'].description.includes('[Learn more]') ? (
-                <p>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>Cumulative Layout Shift: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['cumulative-layout-shift'].displayValue}</p>
+              {lighthouseData.audits['cumulative-layout-shift'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
                   {lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[0]}
                   <a href={lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
+                </div>
               ) : (
-                <p>{lighthouseData.audits['cumulative-layout-shift'].description}</p>
+                <div>{lighthouseData.audits['cumulative-layout-shift'].description}</div>
               )}
               </div>
             ) : (
               <></>
             )}
           </div>
+
           <div>
-            {lighthouseData.audits && lighthouseData.audits['total-blocking-time'] ? (
-              <div className={`metrics`}>
-                <p> Total Blocking Time: {lighthouseData.audits['total-blocking-time'].displayValue} </p>
-                {lighthouseData.audits['total-blocking-time'].description.includes('[Learn more]') ? (
-                <p>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>Total Blocking Time: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['total-blocking-time'].displayValue}</p>
+              {lighthouseData.audits['total-blocking-time'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
                   {lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[0]}
                   <a href={lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
+                </div>
               ) : (
-                <p>{lighthouseData.audits['total-blocking-time'].description}</p>
+                <div>{lighthouseData.audits['total-blocking-time'].description}</div>
               )}
               </div>
             ) : (
               <></>
             )}
           </div>
-          {/* <div>
-            {lighthouseData ? (
-              <>
-                <h2>Opportunites</h2>
-                <hr />
-                <div>
-                  {filterOpportunities().map((opportunity, index) => (
-                    <div key={index}>
-                      <p>{opportunity.description}</p>
-                      {opportunity.url && (
-                        <a href={opportunity.url}>Learn more</a>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <p>No lighthouse data available</p>
-            )}
-          </div> */}
 
-        {/* </div>
-        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}> */}
           
-        </div>
-      </div>
-     
-    </div>
-  )
-
-};
-
-{/* <div>
+          <div id="opportunities-div">
             {lighthouseData ? (
               <>
-                {opportunities.map((opportunity, index) => (
-                  <div key={index}>
-                    <p>{opportunity.description}</p>
-                    {opportunity.url && (
-                      <a href={opportunity.url}>Learn more</a>
-                    )}
+                <h2 style={{textAlign: 'center', color: 'rgb(70, 70, 70)'}}>Suggestions</h2>
+                  <div>
+                    {filterOpportunities().map((opportunity, index) => (
+                      <div key={index} id="opp-div-each">
+                        <p>{opportunity.description}</p>
+                        {opportunity.url && (
+                          <a href={opportunity.url}>Learn more</a>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
               </>
-            ) : (
-              <p>No lighthouse data available</p>
+              ) : (
+                <p>No lighthouse data available</p>
             )}
-          </div> */}
-
-
-   {/* <div id="seo-val-wrap">
-          <div id="seo-val-outer">
-            <div id="seo-val-inner">{testVal1}</div>
           </div>
 
-          <svg id='seo-svg' xmlns="http://www.w3.org/2000/svg" version="1.1" width="50px" height="50px">
-            <defs>
-              <linearGradient id="GradientColor">
-                <stop offset="0%" stop-color="#e91e63" />
-                <stop offset="100%" stop-color="#673ab7" />
-              </linearGradient>
-            </defs>
-            <circle cx="26" cy="26" r="20" stroke-linecap="round" />
-          </svg>
-        </div> */}
+          {lighthouseData && lighthouseData.categories ? <button id="save-data-btn" onClick={sendDataToDatabase}> save data</button> : null}
+          <SeoHistory />
+          </>}
+    </div>
+  )
+};
+
 
