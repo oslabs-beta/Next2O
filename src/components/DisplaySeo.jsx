@@ -176,11 +176,11 @@ export default function DisplaySeo (props) {
       <div id="seo-bins">
         <div id="seo-bin-val"></div>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+      {/* <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
           <h2>Metrics</h2>
           <hr />
-    <div>
+        <div> */}
             
               {/* <div className={`metrics ${(() => {
                 const speedIndex = lighthouseData.audits['speed-index'].displayValue;
@@ -199,7 +199,7 @@ export default function DisplaySeo (props) {
                 return color;
                 })()}`}
               > */}
-              {lighthouseData.audits ? (
+              {/* {lighthouseData.audits ? (
                 <div className={`metrics`}>
                <p>Speed Index: {lighthouseData.audits['speed-index'].displayValue}</p>
               {lighthouseData.audits['speed-index'].description.includes('[Learn more]') ? (
@@ -299,7 +299,7 @@ export default function DisplaySeo (props) {
             ) : (
               <></>
             )}
-          </div>
+          </div> */}
           {/* <div>
             {lighthouseData ? (
               <>
@@ -324,8 +324,8 @@ export default function DisplaySeo (props) {
         {/* </div>
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}> */}
           
-        </div>
-      </div>
+        {/* </div>
+      </div>  */}
      
     </div>
   )
