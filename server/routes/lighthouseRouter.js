@@ -10,7 +10,7 @@ const lighthouseController = require('../controllers/lighthouseController')
 // })
 
 router.post('/lighthouse', lighthouseController.generateReport, (req, res) => {
-  return res.status(200).json({report: res.locals.report});  
+  return res.status(200).json({report: JSON.parse(res.locals.report)});  
 });
 
 

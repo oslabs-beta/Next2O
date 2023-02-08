@@ -5,12 +5,12 @@ import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from "r
 export default function Chart() {
     const [data, setData] = useState([])
 
-    useEffect(() => {
-        fetch('./data.json')
+  
+    fetch('./data.json')
         .then((res) => res.json())
         .then((data) => setData(data.data))
         .catch((error) => console.log(error.message))
-    }, [])
+   
    
     return (
         <LineChart width={300} height={150} data={data}>
