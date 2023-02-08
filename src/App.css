@@ -148,18 +148,23 @@ body {
 #run-LH-btn {
     opacity: 80%;
     background-image: linear-gradient(to right, #1A2980 0%, #26D0CE  51%, #1A2980  100%);
-    margin-top: 20px;
-    padding: 15px 45px;
+    margin-top: 175px;
+    margin-bottom: 20px;
+    padding: 45px 45px;
     text-align: center;
     text-transform: uppercase;
     transition: 0.5s;
     background-size: 200% auto;
-    color: white;            
+    color: white;
+    font-weight: bold;   
+    font-size: 14px;         
     box-shadow: 0 0 20px #eee;
-    border-radius: 10px;
+    border-radius: 7px;
     border-color: transparent;
     display: block;
     cursor: pointer;
+    align-items: center;
+    display: flex;
   }
 
   #run-LH-btn:hover {
@@ -176,6 +181,8 @@ body {
 } */
 
 #seo-wheels {
+  margin-top: 12px;
+  margin-bottom: 12px;
   width: 250px;
   display: flex;
   flex-direction: row;
@@ -186,8 +193,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 75px;
-  height: 75px;
+  width: 70px;
+  height: 70px;
 }
 
 #seo-val-and-title {
@@ -196,6 +203,7 @@ body {
   justify-content: center;
   align-items: center;
   font-weight: bold;
+  font-size: 14px;
 }
 
 #h2-scores {
@@ -226,52 +234,46 @@ body {
   max-width: 70%;
 }
 
-/* #seo-val-outer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  box-shadow: 2px 2px 4px -1px rgba(0, 0, 0, 0.15), -2px -2px 4px -1px rgba(255, 255, 255, 0.7);
+#opportunities-div {
+  padding: 8px;
 }
 
-#seo-val-inner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 70%;
-  height: 70%;
-  border-radius: 50%;
-  box-shadow: inset 1.5px 1.5px 2px -1px rgba(0, 0, 0, 0.2),
-              inset -1.5px -1.5px 2px -1px rgba(255, 255, 255, 0.7),
-              -0.3px -0.3px 0px rgba(255, 255, 255, 1),
-              0.3px 0.3px 0px rgba(0, 0, 0, 0.15),
-              0px 4px 3px -3px rgba(0, 0, 0, 0.05);
-} */
+#opp-div-each {
+  margin-bottom: 7px;
+  padding: 5px;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+}
 
-/* circle {
-  fill: none;
-  stroke: url(#GradientColor);
-  stroke-width: 13%;
-  stroke-dasharray: 124;
-  stroke-dashoffset: 124;
-  animation: anim 2s linear forwards;
-} */
+#save-data-btn {
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 13px;
+  line-height: 29px;
+  padding: 0 10px 0 11px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 100px;
+  margin-bottom: 15px;
+}
 
-/* #seo-svg {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
+#save-data-btn:hover {
+  background-color: #f7fafa;
+}
 
-/* @keyframes anim {
-  100%{
-    stroke-dashoffset: 7.4;
-      stroke-dashoffset: calc(124 - (124 * ( {testVal1} ))) 
-  }
-} */
+
+
+/* /// UI Bottom Portion /// */
 
 .div-footer {
   text-align: center;

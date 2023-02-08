@@ -31,7 +31,7 @@ const MainUI = (props) => {
             <img id='logo' src={logoFill} alt="Logo" />
           </div>
           <div className='div-icon'>
-            <CloseIcon fontSize='small' className='CloseIcon' />
+            <CloseIcon fontSize='small' className='CloseIcon'/>
           </div>
         </div>
 

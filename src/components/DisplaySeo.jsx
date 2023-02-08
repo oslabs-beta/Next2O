@@ -80,12 +80,6 @@ export default function DisplaySeo (props) {
    // tip: be midnful of the fact that after running lighthouse it'd take lighthouseData
    // some time to populate, so using seoScore or performanceScore would work best with
    // conditional rendering 
-  //  const seoScore = lighthouseData.categories.performance.id.score;
-  //  const performanceScore = lighthouseData.categories.performance.id.score;
-  //  const testVal1 = 94;
-  //  const testVal2 = 50;
-  //  const testVal3 = 22;
-  //  const avgVal = Math.round((testVal1 + testVal2 + testVal3) / 3)
 
    const filledStyle = {
     backgroundColor: '#3F51B5',
@@ -148,15 +142,19 @@ export default function DisplaySeo (props) {
 
   return (
     <div id="seo-div">
+
+  { !lighthouseData || !lighthouseData.categories ? 
       <div>
         <button id="run-LH-btn" onClick={runLighthouse}>Run Analysis</button>
-        {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save data</button> : null}
       </div>
+      : 
+      <>
       {/* <h2 id='h2-scores'>Overall Score:</h2>
       <div id="seo-wheel-total">
         <CircularProgressbar value={avgVal} text={`${avgVal}`} counterClockwise
         styles={buildStyles(thinStyle)} />
       </div>  */}
+      <h1 style={{margin: '20px', color: 'rgb(70, 70, 70)'}}>Metrics</h1>
 
       <div id="seo-wheels">
       {lighthouseData.categories ? <div id="seo-val-and-title">
@@ -182,126 +180,7 @@ export default function DisplaySeo (props) {
         <h2 style={{color: 'rgb(70, 70, 70)'}}>Metrics</h2>
         <div id="seo-bin-values">
 
-      <div>
-        {lighthouseData.audits ? (
-          <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['speed-index'].displayValue}</p>
-            <p><strong>Speed Index:</strong></p>
-            <div id="metrics-desc-div">
-            {lighthouseData.audits['speed-index'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['speed-index'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['speed-index'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p> ) : (
-                <p>{lighthouseData.audits['speed-index'].description}</p>
-              )
-                }
-            </div>
-          </div>
-        ) : <></>
-        }
-      </div>
-
-      <div>
-        {lighthouseData.audits ? (
-          <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['first-contentful-paint'].displayValue}</p>
-            <p><strong>First Contentful Paint:</strong></p>
-            <div id="metrics-desc-div">
-            {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p> ) : (
-                <p>{lighthouseData.audits['first-contentful-paint'].description}</p>
-              )
-                }
-            </div>
-          </div>
-        ) : <></>
-        }
-      </div>
-
-      <div>
-        {lighthouseData.audits ? (
-          <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['largest-contentful-paint'].displayValue}</p>
-            <p><strong>Largest Contentful Paint:</strong></p>
-            <div id="metrics-desc-div">
-            {lighthouseData.audits['largest-contentful-paint'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p> ) : (
-                <p>{lighthouseData.audits['largest-contentful-paint'].description}</p>
-              )
-                }
-            </div>
-          </div>
-        ) : <></>
-        }
-      </div>
-
-      <div>
-        {lighthouseData.audits ? (
-          <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['time-to-interactive'].displayValue}</p>
-            <p><strong>Time to Interactive:</strong></p>
-            <div id="metrics-desc-div">
-            {lighthouseData.audits['time-to-interactive'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p> ) : (
-                <p>{lighthouseData.audits['time-to-interactive'].description}</p>
-              )
-                }
-            </div>
-          </div>
-        ) : <></>
-        }
-      </div>
-
-      <div>
-        {lighthouseData.audits ? (
-          <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['cumulative-layout-shift'].displayValue}</p>
-            <p><strong>Cumulative Layout Shift:</strong></p>
-            <div id="metrics-desc-div">
-            {lighthouseData.audits['cumulative-layout-shift'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p> ) : (
-                <p>{lighthouseData.audits['cumulative-layout-shift'].description}</p>
-              )
-                }
-            </div>
-          </div>
-        ) : <></>
-        }
-      </div>
-
-      <div>
-        {lighthouseData.audits ? (
-          <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['total-blocking-time'].displayValue}</p>
-            <p><strong>Total Blocking Time:</strong></p>
-            <div id="metrics-desc-div">
-            {lighthouseData.audits['total-blocking-time'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p> ) : (
-                <p>{lighthouseData.audits['total-blocking-time'].description}</p>
-              )
-                }
-            </div>
-          </div>
-        ) : <></>
-        }
-      </div>
-
+      
           {/* <div id="seo-metrics-box">
             <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
             <p><strong>Heading</strong></p>
@@ -312,9 +191,9 @@ export default function DisplaySeo (props) {
       </div> */}
 
       
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+      {/* <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
-          
+           */}
 
             
               {/* <div className={`metrics ${(() => {
@@ -334,6 +213,7 @@ export default function DisplaySeo (props) {
                 return color;
                 })()}`}
               > */}
+
           <div>
               {lighthouseData.audits ? (
               <div id="seo-metrics-box">
@@ -448,155 +328,31 @@ export default function DisplaySeo (props) {
             )}
           </div>
 
-          {/* <div>
-            {lighthouseData.audits ? (
-              <div id="seo-metrics-box">
-                <p> First Contentful Paint: {lighthouseData.audits['first-contentful-paint'].displayValue} </p>
-                {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
-              ) : (
-                <p>{lighthouseData.audits['first-contentful-paint'].description}</p>
-              )}
-              </div>
-            ) : (
-              <></>
-            )}
-          </div> */}
-          {/* <div>
-            {lighthouseData.audits ? (
-              <div className={`metrics`}>
-                <p> Largest Contentful Paint: {lighthouseData.audits['largest-contentful-paint'].displayValue} </p>
-                {lighthouseData.audits['largest-contentful-paint'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
-              ) : (
-                <p>{lighthouseData.audits['largest-contentful-paint'].description}</p>
-              )}
-              </div>
-            ) : (
-              <></>
-            )}
-          </div> */}
-          {/* <div>
-            {lighthouseData.audits && lighthouseData.audits['time-to-interactive'] ? (
-              <div className={`metrics`}>
-                <p> Time to Interactive: {lighthouseData.audits['time-to-interactive'].displayValue} </p>
-                {lighthouseData.audits['time-to-interactive'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
-              ) : (
-                <p>{lighthouseData.audits['time-to-interactive'].description}</p>
-              )}
-              </div>
-            ) : (
-              <></>
-            )}
-          </div> */}
-          {/* <div>
-            {lighthouseData.audits && lighthouseData.audits['cumulative-layout-shift'] ? (
-              <div className={`metrics`}>
-                <p> Cumulative Layout Shift: {lighthouseData.audits['cumulative-layout-shift'].displayValue} </p>
-                {lighthouseData.audits['cumulative-layout-shift'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
-              ) : (
-                <p>{lighthouseData.audits['cumulative-layout-shift'].description}</p>
-              )}
-              </div>
-            ) : (
-              <></>
-            )}
-          </div> */}
-          {/* <div>
-            {lighthouseData.audits && lighthouseData.audits['total-blocking-time'] ? (
-              <div className={`metrics`}>
-                <p> Total Blocking Time: {lighthouseData.audits['total-blocking-time'].displayValue} </p>
-                {lighthouseData.audits['total-blocking-time'].description.includes('[Learn more]') ? (
-                <p>
-                  {lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[0]}
-                  <a href={lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
-              ) : (
-                <p>{lighthouseData.audits['total-blocking-time'].description}</p>
-              )}
-              </div>
-            ) : (
-              <></>
-            )}
-          </div> */}
-          <div> 
-
+          
+          <div id="opportunities-div">
             {lighthouseData ? (
               <>
-                <h2>Opportunites</h2>
-                <hr />
-                <div>
-                  {filterOpportunities().map((opportunity, index) => (
-                    <div key={index}>
-                      <p>{opportunity.description}</p>
-                      {opportunity.url && (
-                        <a href={opportunity.url}>Learn more</a>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                <h2 style={{textAlign: 'center', color: 'rgb(70, 70, 70)'}}>Suggestions</h2>
+                  <div>
+                    {filterOpportunities().map((opportunity, index) => (
+                      <div key={index} id="opp-div-each">
+                        <p>{opportunity.description}</p>
+                        {opportunity.url && (
+                          <a href={opportunity.url}>Learn more</a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
               </>
-            ) : (
-              <p>No lighthouse data available</p>
+              ) : (
+                <p>No lighthouse data available</p>
             )}
           </div>
 
-        {/* </div>
-        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}> */}
-          
-        </div>
-      </div>
-     
+          {lighthouseData && lighthouseData.categories ? <button id="save-data-btn" onClick={sendDataToDatabase}> save data</button> : null}
+          </>}
     </div>
   )
-
 };
 
-{/* <div>
-            {lighthouseData ? (
-              <>
-                {opportunities.map((opportunity, index) => (
-                  <div key={index}>
-                    <p>{opportunity.description}</p>
-                    {opportunity.url && (
-                      <a href={opportunity.url}>Learn more</a>
-                    )}
-                  </div>
-                ))}
-              </>
-            ) : (
-              <p>No lighthouse data available</p>
-            )}
-          </div> */}
-
-
-   {/* <div id="seo-val-wrap">
-          <div id="seo-val-outer">
-            <div id="seo-val-inner">{testVal1}</div>
-          </div>
-
-          <svg id='seo-svg' xmlns="http://www.w3.org/2000/svg" version="1.1" width="50px" height="50px">
-            <defs>
-              <linearGradient id="GradientColor">
-                <stop offset="0%" stop-color="#e91e63" />
-                <stop offset="100%" stop-color="#673ab7" />
-              </linearGradient>
-            </defs>
-            <circle cx="26" cy="26" r="20" stroke-linecap="round" />
-          </svg>
-        </div> */}
 
