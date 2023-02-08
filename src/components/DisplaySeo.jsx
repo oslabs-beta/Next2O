@@ -1,6 +1,9 @@
 import { fontWeight } from "@mui/system";
 import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+// import Queries from "./Queries";
+// import Chart from "./LineChart";
+import SeoHistory from "./SeoHistory"
 import 'react-circular-progressbar/dist/styles.css';
 
 import '../metrics.css';
@@ -11,6 +14,12 @@ export default function DisplaySeo (props) {
   // const [domain, setDomain] = useState('');
   // const [userId, setUserId] = useState('');
   const [lighthouseData, setLighthouseData] = useState({});
+
+  //const [speedIndexColor, setSpeedIndexColor] = useState('');
+
+  // useEffect(() => {
+  //   console.log(speedIndexColor);
+  // }, [speedIndexColor]);
   const [debounce, setDebounce] = useState(false)
 
   const runLighthouse = async (e) => {
@@ -35,7 +44,8 @@ export default function DisplaySeo (props) {
         //console.log(parsed.audits['speed-index'].displayValue)
         await setLighthouseData(parsed)
         setDebounce(false)
-        console.log(parsed);
+        
+        // console.log(parsed);
     } catch(err) {
       console.log(err)
     }
@@ -55,7 +65,7 @@ export default function DisplaySeo (props) {
       const response = await fetch('http://localhost:8080/api/seoItems', {
         method: "POST",
         body: JSON.stringify({
-          userId: props.info.id, 
+          userId: props.id, 
           url: lighthouseData.requestedUrl, 
           audits: lighthouseData.audits, 
           seoScore: lighthouseData.categories.seo.score, 
@@ -145,6 +155,7 @@ export default function DisplaySeo (props) {
   { !lighthouseData || !lighthouseData.categories ? 
       <div>
         <button id="run-LH-btn" onClick={runLighthouse}>Run Analysis</button>
+
       </div>
       : 
       <>
@@ -349,6 +360,7 @@ export default function DisplaySeo (props) {
           </div>
 
           {lighthouseData && lighthouseData.categories ? <button id="save-data-btn" onClick={sendDataToDatabase}> save data</button> : null}
+          <SeoHistory />
           </>}
     </div>
   )
