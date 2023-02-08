@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
@@ -22,6 +22,10 @@ const MainUI = (props) => {
     // props.performance()
     console.log('performance')
   }
+
+  useEffect(() => {
+    runTreeVisualizer()
+  }, [])
 
   return (
     <div className='div-container'>

@@ -85,6 +85,7 @@ body {
 #tree-div {
   overflow: scroll;
   display: flex;
+  height: 100%;
   flex-direction: column;
   flex: 1;
   /* border-bottom: 2px solid #3f51b53e;

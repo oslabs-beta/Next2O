@@ -11,13 +11,11 @@ export default function DisplaySeo (props) {
   // const [domain, setDomain] = useState('');
   // const [userId, setUserId] = useState('');
   const [lighthouseData, setLighthouseData] = useState({});
-  //const [speedIndexColor, setSpeedIndexColor] = useState('');
-
-  // useEffect(() => {
-  //   console.log(speedIndexColor);
-  // }, [speedIndexColor]);
+  const [debounce, setDebounce] = useState(false)
 
   const runLighthouse = async (e) => {
+    if (debounce === true) return
+    setDebounce(true)
     try {
         e.preventDefault();
         const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
@@ -36,6 +34,7 @@ export default function DisplaySeo (props) {
         let parsed = JSON.parse(report.report);
         //console.log(parsed.audits['speed-index'].displayValue)
         await setLighthouseData(parsed)
+        setDebounce(false)
         console.log(parsed);
     } catch(err) {
       console.log(err)
