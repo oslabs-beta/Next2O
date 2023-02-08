@@ -1,3 +1,4 @@
+import { fontWeight } from "@mui/system";
 import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -10,11 +11,11 @@ export default function DisplaySeo (props) {
   // const [domain, setDomain] = useState('');
   // const [userId, setUserId] = useState('');
   const [lighthouseData, setLighthouseData] = useState({});
-  const [speedIndexColor, setSpeedIndexColor] = useState('');
+  //const [speedIndexColor, setSpeedIndexColor] = useState('');
 
-  useEffect(() => {
-    console.log(speedIndexColor);
-  }, [speedIndexColor]);
+  // useEffect(() => {
+  //   console.log(speedIndexColor);
+  // }, [speedIndexColor]);
 
   const runLighthouse = async (e) => {
     try {
@@ -40,9 +41,10 @@ export default function DisplaySeo (props) {
       console.log(err)
     }
   };
+
   // useEffect(() => {
-  //   console.log(lighthouseData.audits['speed-index'].displayValue);
-  // }, [lighthouseData.audits]);
+  //   // console.log(lighthouseData.audits['speed-index'].displayValue);
+  // }, [lighthouseData]);
 
   const sendDataToDatabase = async (e) => {
 
@@ -72,7 +74,11 @@ export default function DisplaySeo (props) {
         console.log(err)
       }
   };
-   //console.log(lighthouseData.audits['speed-index'].displayValue);
+   // tip: be midnful of the fact that after running lighthouse it'd take lighthouseData
+   // some time to populate, so using seoScore or performanceScore would work best with
+   // conditional rendering 
+  //  const seoScore = lighthouseData.categories.performance.id.score;
+  //  const performanceScore = lighthouseData.categories.performance.id.score;
    const testVal1 = 94;
    const testVal2 = 50;
    const testVal3 = 22;
@@ -89,7 +95,9 @@ export default function DisplaySeo (props) {
    const thinStyle = {
     textColor: "#3F51B5",
     pathColor: "#3F51B5",
+    textSize: "24px",
   }
+  
 
   // useEffect(() => {
   //   if (lighthouseData && lighthouseData.audits && lighthouseData.audits['speed-index']) {
@@ -134,12 +142,14 @@ export default function DisplaySeo (props) {
     return opportunities;
   };
 
+
   return (
     <div id="seo-div">
-      <button onClick={runLighthouse}>Run lighthouse</button>
-      <p>{url && url[0].url}</p>
-      {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save data</button> : null}
-
+      <div>
+        <button id="run-LH-btn" onClick={runLighthouse}>Run lighthouse</button>
+        <p>{url && url[0].url}</p>
+        {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save data</button> : null}
+      </div>
       <h2 id='h2-scores'>Overall Score:</h2>
       <div id="seo-wheel-total">
         <CircularProgressbar value={avgVal} text={`${avgVal}`} counterClockwise
@@ -176,8 +186,22 @@ export default function DisplaySeo (props) {
       </div>
 
       <div id="seo-bins">
-        <div id="seo-bin-val"></div>
+        <h2 style={{color: 'rgb(70, 70, 70)'}}>Metrics</h2>
+        <div id="seo-bin-values">
+          <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
+            <p><strong>Heading</strong></p>
+            <div id="metrics-desc-div">Description Lorem ipsum dolor sit amet consectetur </div>
+          </div>
+          <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
+            <p><strong>Heading</strong></p>
+            <div id="metrics-desc-div">Description Lorem ipsum dolor sit amet consectetur </div>
+          </div>
+        </div>
       </div>
+
+      
       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
           <h2>Metrics</h2>
@@ -300,7 +324,7 @@ export default function DisplaySeo (props) {
               <></>
             )}
           </div>
-          <div>
+          {/* <div>
             {lighthouseData ? (
               <>
                 <h2>Opportunites</h2>
@@ -319,7 +343,7 @@ export default function DisplaySeo (props) {
             ) : (
               <p>No lighthouse data available</p>
             )}
-          </div>
+          </div> */}
 
         </div>
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
