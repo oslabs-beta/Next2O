@@ -50,15 +50,17 @@ export default function DisplaySeo (props) {
 
     e.preventDefault();
     try {
-      console.log(lighthouseData.categories);
-      console.log(lighthouseData.requestedUrl)
+      // console.log(lighthouseData.categories);
+      // console.log(lighthouseData.requestedUrl)
+      // console.log(lighthouseData.categories.performance.score)
       const response = await fetch('http://localhost:8080/api/seoItems', {
         method: "POST",
         body: JSON.stringify({
           userId: props.info.id, 
           url: lighthouseData.requestedUrl, 
           audits: lighthouseData.audits, 
-          categories: lighthouseData.categories, 
+          seoScore: lighthouseData.categories.seo.score, 
+          performanceScore: lighthouseData.categories.performance.score
         }),
       headers: {
         "content-Type": "application/json"
@@ -70,6 +72,7 @@ export default function DisplaySeo (props) {
       }
       const data = await response.json();
       console.log(data);
+      //console.log(lighthouseData.categories.seo.score, lighthouseData.categories.performance.scroe)
       } catch (err) {
         console.log(err)
       }
@@ -79,10 +82,10 @@ export default function DisplaySeo (props) {
    // conditional rendering 
   //  const seoScore = lighthouseData.categories.performance.id.score;
   //  const performanceScore = lighthouseData.categories.performance.id.score;
-   const testVal1 = 94;
-   const testVal2 = 50;
-   const testVal3 = 22;
-   const avgVal = Math.round((testVal1 + testVal2 + testVal3) / 3)
+  //  const testVal1 = 94;
+  //  const testVal2 = 50;
+  //  const testVal3 = 22;
+  //  const avgVal = Math.round((testVal1 + testVal2 + testVal3) / 3)
 
    const filledStyle = {
     backgroundColor: '#3F51B5',
@@ -146,69 +149,175 @@ export default function DisplaySeo (props) {
   return (
     <div id="seo-div">
       <div>
-        <button id="run-LH-btn" onClick={runLighthouse}>Run lighthouse</button>
-        <p>{url && url[0].url}</p>
+        <button id="run-LH-btn" onClick={runLighthouse}>Run Analysis</button>
         {lighthouseData && lighthouseData.categories ? <button onClick={sendDataToDatabase}> save data</button> : null}
       </div>
-      <h2 id='h2-scores'>Overall Score:</h2>
+      {/* <h2 id='h2-scores'>Overall Score:</h2>
       <div id="seo-wheel-total">
         <CircularProgressbar value={avgVal} text={`${avgVal}`} counterClockwise
         styles={buildStyles(thinStyle)} />
-      </div>
+      </div>  */}
 
       <div id="seo-wheels">
-        <div id="seo-val-and-title">
+      {lighthouseData.categories ? <div id="seo-val-and-title">
           <div id="seo-val-wrap">
-            <CircularProgressbar value={testVal1} text={`${testVal1}`} counterClockwise
+             <CircularProgressbar value={Math.round(lighthouseData.categories.seo.score * 100)} text={`${Math.round(lighthouseData.categories.seo.score * 100)}`} counterClockwise
             background backgroundPadding={6}
-            styles={buildStyles(filledStyle)} />
+            styles={buildStyles(filledStyle)} /> 
           </div>
-          <p>Speed</p>
-        </div>
+          <p style={{ padding: '5px' }}>SEO</p> 
+        </div> : null}
 
-        <div id="seo-val-and-title">
+        { lighthouseData.categories ?<div id="seo-val-and-title">
           <div id="seo-val-wrap">
-            <CircularProgressbar value={testVal2} text={`${testVal2}`} counterClockwise
+            <CircularProgressbar value={Math.round(lighthouseData.categories.performance.score * 100)} text={`${Math.round(lighthouseData.categories.performance.score * 100)}`} counterClockwise
             background backgroundPadding={6}
-            styles={buildStyles(filledStyle)} />
+            styles={buildStyles(filledStyle)} /> 
           </div>
-          <p>SEO</p>
-        </div>
-
-        <div id="seo-val-and-title">
-          <div id="seo-val-wrap">
-            <CircularProgressbar value={testVal3} text={`${testVal3}`} counterClockwise
-            background backgroundPadding={6}
-            styles={buildStyles(filledStyle)} />
-          </div>
-          <p>Network</p>
-        </div>
+          <p style={{ padding: '5px' }}>Performance</p>
+        </div> : null}
       </div>
 
-      <div id="seo-bins">
+      {/* <div id="seo-bins">
         <h2 style={{color: 'rgb(70, 70, 70)'}}>Metrics</h2>
         <div id="seo-bin-values">
+
+      <div>
+        {lighthouseData.audits ? (
           <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
-            <p><strong>Heading</strong></p>
-            <div id="metrics-desc-div">Description Lorem ipsum dolor sit amet consectetur </div>
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['speed-index'].displayValue}</p>
+            <p><strong>Speed Index:</strong></p>
+            <div id="metrics-desc-div">
+            {lighthouseData.audits['speed-index'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['speed-index'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['speed-index'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p> ) : (
+                <p>{lighthouseData.audits['speed-index'].description}</p>
+              )
+                }
+            </div>
           </div>
-          <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
-            <p><strong>Heading</strong></p>
-            <div id="metrics-desc-div">Description Lorem ipsum dolor sit amet consectetur </div>
-          </div>
-        </div>
+        ) : <></>
+        }
       </div>
+
+      <div>
+        {lighthouseData.audits ? (
+          <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['first-contentful-paint'].displayValue}</p>
+            <p><strong>First Contentful Paint:</strong></p>
+            <div id="metrics-desc-div">
+            {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p> ) : (
+                <p>{lighthouseData.audits['first-contentful-paint'].description}</p>
+              )
+                }
+            </div>
+          </div>
+        ) : <></>
+        }
+      </div>
+
+      <div>
+        {lighthouseData.audits ? (
+          <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['largest-contentful-paint'].displayValue}</p>
+            <p><strong>Largest Contentful Paint:</strong></p>
+            <div id="metrics-desc-div">
+            {lighthouseData.audits['largest-contentful-paint'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p> ) : (
+                <p>{lighthouseData.audits['largest-contentful-paint'].description}</p>
+              )
+                }
+            </div>
+          </div>
+        ) : <></>
+        }
+      </div>
+
+      <div>
+        {lighthouseData.audits ? (
+          <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['time-to-interactive'].displayValue}</p>
+            <p><strong>Time to Interactive:</strong></p>
+            <div id="metrics-desc-div">
+            {lighthouseData.audits['time-to-interactive'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p> ) : (
+                <p>{lighthouseData.audits['time-to-interactive'].description}</p>
+              )
+                }
+            </div>
+          </div>
+        ) : <></>
+        }
+      </div>
+
+      <div>
+        {lighthouseData.audits ? (
+          <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['cumulative-layout-shift'].displayValue}</p>
+            <p><strong>Cumulative Layout Shift:</strong></p>
+            <div id="metrics-desc-div">
+            {lighthouseData.audits['cumulative-layout-shift'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p> ) : (
+                <p>{lighthouseData.audits['cumulative-layout-shift'].description}</p>
+              )
+                }
+            </div>
+          </div>
+        ) : <></>
+        }
+      </div>
+
+      <div>
+        {lighthouseData.audits ? (
+          <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['total-blocking-time'].displayValue}</p>
+            <p><strong>Total Blocking Time:</strong></p>
+            <div id="metrics-desc-div">
+            {lighthouseData.audits['total-blocking-time'].description.includes('[Learn more]') ? (
+                <p>
+                  {lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </p> ) : (
+                <p>{lighthouseData.audits['total-blocking-time'].description}</p>
+              )
+                }
+            </div>
+          </div>
+        ) : <></>
+        }
+      </div>
+
+          {/* <div id="seo-metrics-box">
+            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
+            <p><strong>Heading</strong></p>
+            <div id="metrics-desc-div">Description Lorem ipsum dolor sit amet consectetur </div>
+          </div> */}
+
+        {/* </div>
+      </div> */}
 
       
       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
         <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
-          <h2>Metrics</h2>
-          <hr />
-          <div>
-            {lighthouseData.audits ? (
-              <div className={`metrics ${(() => {
+          
+
+            
+              {/* <div className={`metrics ${(() => {
                 const speedIndex = lighthouseData.audits['speed-index'].displayValue;
                 let color = '';
                 if (speedIndex >= 0 && speedIndex <= 3.4) {
@@ -224,24 +333,124 @@ export default function DisplaySeo (props) {
                 console.log(color)
                 return color;
                 })()}`}
-              >
-               <p>Speed Index: {lighthouseData.audits['speed-index'].displayValue}</p>
+              > */}
+          <div>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>Speed Index: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['speed-index'].displayValue}</p>
               {lighthouseData.audits['speed-index'].description.includes('[Learn more]') ? (
-                <p>
+                <div id="metrics-desc-div">
                   {lighthouseData.audits['speed-index'].description.split('[Learn more](')[0]}
                   <a href={lighthouseData.audits['speed-index'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
-                </p>
+                </div>
               ) : (
-                <p>{lighthouseData.audits['speed-index'].description}</p>
+                <div>{lighthouseData.audits['speed-index'].description}</div>
               )}
               </div>
             ) : (
               <></>
             )}
           </div>
+
           <div>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>First Contentful Paint: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['first-contentful-paint'].displayValue}</p>
+              {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
+                  {lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['first-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </div>
+              ) : (
+                <div>{lighthouseData.audits['first-contentful-paint'].description}</div>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          <div>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>Largest Contentful Paint: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['largest-contentful-paint'].displayValue}</p>
+              {lighthouseData.audits['largest-contentful-paint'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
+                  {lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['largest-contentful-paint'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </div>
+              ) : (
+                <div>{lighthouseData.audits['largest-contentful-paint'].description}</div>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          <div>
+              {lighthouseData.audits && lighthouseData.audits["time-to-interactive"] ? (
+              <div id="seo-metrics-box">
+                <p><strong>Time to Interactive: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['time-to-interactive'].displayValue}</p>
+              {lighthouseData.audits['time-to-interactive'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
+                  {lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['time-to-interactive'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </div>
+              ) : (
+                <div>{lighthouseData.audits['time-to-interactive'].description}</div>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          <div>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>Cumulative Layout Shift: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['cumulative-layout-shift'].displayValue}</p>
+              {lighthouseData.audits['cumulative-layout-shift'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
+                  {lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['cumulative-layout-shift'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </div>
+              ) : (
+                <div>{lighthouseData.audits['cumulative-layout-shift'].description}</div>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          <div>
+              {lighthouseData.audits ? (
+              <div id="seo-metrics-box">
+                <p><strong>Total Blocking Time: </strong></p>
+               <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>{lighthouseData.audits['total-blocking-time'].displayValue}</p>
+              {lighthouseData.audits['total-blocking-time'].description.includes('[Learn more]') ? (
+                <div id="metrics-desc-div">
+                  {lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[0]}
+                  <a href={lighthouseData.audits['total-blocking-time'].description.split('[Learn more](')[1].split(')')[0]}>Learn more</a>
+                </div>
+              ) : (
+                <div>{lighthouseData.audits['total-blocking-time'].description}</div>
+              )}
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          {/* <div>
             {lighthouseData.audits ? (
-              <div className={`metrics`}>
+              <div id="seo-metrics-box">
                 <p> First Contentful Paint: {lighthouseData.audits['first-contentful-paint'].displayValue} </p>
                 {lighthouseData.audits['first-contentful-paint'].description.includes('[Learn more]') ? (
                 <p>
@@ -255,8 +464,8 @@ export default function DisplaySeo (props) {
             ) : (
               <></>
             )}
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             {lighthouseData.audits ? (
               <div className={`metrics`}>
                 <p> Largest Contentful Paint: {lighthouseData.audits['largest-contentful-paint'].displayValue} </p>
@@ -272,8 +481,8 @@ export default function DisplaySeo (props) {
             ) : (
               <></>
             )}
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             {lighthouseData.audits && lighthouseData.audits['time-to-interactive'] ? (
               <div className={`metrics`}>
                 <p> Time to Interactive: {lighthouseData.audits['time-to-interactive'].displayValue} </p>
@@ -289,8 +498,8 @@ export default function DisplaySeo (props) {
             ) : (
               <></>
             )}
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             {lighthouseData.audits && lighthouseData.audits['cumulative-layout-shift'] ? (
               <div className={`metrics`}>
                 <p> Cumulative Layout Shift: {lighthouseData.audits['cumulative-layout-shift'].displayValue} </p>
@@ -306,8 +515,8 @@ export default function DisplaySeo (props) {
             ) : (
               <></>
             )}
-          </div>
-          <div>
+          </div> */}
+          {/* <div>
             {lighthouseData.audits && lighthouseData.audits['total-blocking-time'] ? (
               <div className={`metrics`}>
                 <p> Total Blocking Time: {lighthouseData.audits['total-blocking-time'].displayValue} </p>
@@ -323,8 +532,9 @@ export default function DisplaySeo (props) {
             ) : (
               <></>
             )}
-          </div>
-          {/* <div>
+          </div> */}
+          <div> 
+
             {lighthouseData ? (
               <>
                 <h2>Opportunites</h2>
@@ -343,10 +553,10 @@ export default function DisplaySeo (props) {
             ) : (
               <p>No lighthouse data available</p>
             )}
-          </div> */}
+          </div>
 
-        </div>
-        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
+        {/* </div>
+        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}> */}
           
         </div>
       </div>
@@ -373,10 +583,8 @@ export default function DisplaySeo (props) {
             )}
           </div> */}
 
-/**
- * 
- * 
- *  <div id="seo-val-wrap">
+
+   {/* <div id="seo-val-wrap">
           <div id="seo-val-outer">
             <div id="seo-val-inner">{testVal1}</div>
           </div>
@@ -390,5 +598,5 @@ export default function DisplaySeo (props) {
             </defs>
             <circle cx="26" cy="26" r="20" stroke-linecap="round" />
           </svg>
-        </div>
- */
+        </div> */}
+

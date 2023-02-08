@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Errors = (props) => {
-  
+
   return (
     <div id='error-div-inner'>
       <p><strong>Error number:</strong> {props.number + 1}</p>

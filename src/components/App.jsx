@@ -62,7 +62,7 @@ export default function App() {
 
     const svg = d3.select(".chart")
       .attr("viewBox", [-margin.left, -margin.top, width, height])
-      .style("font", "5px sans-serif")
+      .style("font", "10px sans-serif")
 
     const gLink = svg.append("g")
       .attr("fill", "none")
@@ -75,8 +75,8 @@ export default function App() {
       .attr("pointer-events", "all")
 
     svg.call(d3.zoom()
-      .scaleExtent([4, Infinity])
-      .extent([[100, 120], [100, 40]])
+      .scaleExtent([30, Infinity])
+      .extent([[80, 120], [100, 40]])
       .on('zoom', (event) => zoomed(event))
     )
 
@@ -87,11 +87,11 @@ export default function App() {
 
     }
 
-    var tooltip = d3.select('.tree-div')
+    var tooltip = d3.select('#tree-div')
       .append("div")
       .style("position", "absolute")
       .style('text-align', 'centre')
-      .style('font-size', '1.25em')
+      .style('font-size', '1em')
       .style('font-family', 'sans-serif')
       .style("background-color", "lightsteelblue")
       .style("border", "solid")
@@ -164,12 +164,12 @@ export default function App() {
         .on("click", (event, d) => { click(d) });
 
       nodeEnter.append("circle")
-        .attr("r", 2.5)
+        .attr("r", 4.5)
         .attr("fill", d => d.data.attributes.flagged ? "red" : "green")
         .attr("stroke-width", 10)
 
       nodeEnter.append("text")
-        .attr("dy", "0.31em")
+        .attr("dy", "0.5em")
         .attr("x", d => d._children ? -6 : 6)
         .attr("text-anchor", d => d._children ? "end" : "start")
         .text(d => d.data.name)
