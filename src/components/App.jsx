@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { DisplaySeo } from './DisplaySeo';
 import * as d3 from 'd3';
-import '../App.css'
+import '../App.css';
 import MainUI from './MainUI'
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
-    chrome.identity.getProfileUserInfo({'accountStatus': 'ANY'}, function(info) {
+    chrome.identity.getProfileUserInfo({ 'accountStatus': 'ANY' }, function (info) {
       setUserInfo(info);
     });
   }, []);
@@ -62,7 +62,7 @@ export default function App() {
 
     const svg = d3.select(".chart")
       .attr("viewBox", [-margin.left, -margin.top, width, height])
-      .style("font", "5px sans-serif")
+      .style("font", "10px sans-serif")
 
     const gLink = svg.append("g")
       .attr("fill", "none")
@@ -74,11 +74,24 @@ export default function App() {
       .attr("cursor", "pointer")
       .attr("pointer-events", "all")
 
-    var tooltip = d3.select('.tree-div')
+    svg.call(d3.zoom()
+      .scaleExtent([30, Infinity])
+      .extent([[80, 120], [100, 40]])
+      .on('zoom', (event) => zoomed(event))
+    )
+
+    function zoomed(e) {
+
+      d3.selectAll('g').attr('transform', `translate(${e.transform.x}, ${e.transform.y}) scale(${e.transform.k})`);
+      update(root)
+
+    }
+
+    var tooltip = d3.select('#tree-div')
       .append("div")
       .style("position", "absolute")
       .style('text-align', 'centre')
-      .style('font-size', '1.25em')
+      .style('font-size', '1em')
       .style('font-family', 'sans-serif')
       .style("background-color", "lightsteelblue")
       .style("border", "solid")
@@ -151,12 +164,12 @@ export default function App() {
         .on("click", (event, d) => { click(d) });
 
       nodeEnter.append("circle")
-        .attr("r", 2.5)
-        .attr("fill", d => d.data.attributes.flagged ? "red" : d._children ? "green" : "gray")
+        .attr("r", 4.5)
+        .attr("fill", d => d.data.attributes.flagged ? "red" : "green")
         .attr("stroke-width", 10)
 
       nodeEnter.append("text")
-        .attr("dy", "0.31em")
+        .attr("dy", "0.5em")
         .attr("x", d => d._children ? -6 : 6)
         .attr("text-anchor", d => d._children ? "end" : "start")
         .text(d => d.data.name)
@@ -439,9 +452,9 @@ export default function App() {
     return currentTree
   };
 
- 
 
-  
+
+
 
   return (
     <div>

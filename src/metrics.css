@@ -1,0 +1,20 @@
+.metrics {
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.green {
+  background-color: lightgreen;
+  color: black;
+}
+
+.orange {
+  background-color: orange;
+  color: black;
+}
+
+.red {
+  background-color: red;
+  color: white;
+}
