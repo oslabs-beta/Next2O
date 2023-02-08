@@ -4,10 +4,10 @@ const databaseController = {};
 
 databaseController.addToSeo = async (req, res, next) => {
   try {
-    const {userId, url, audits, categories, categoryGroups} = req.body;
+    const {userId, url, audits, seoScore, performanceScore} = req.body;
     
-    const values = [userId, url, audits, categories, categoryGroups];
-    const queryString = 'INSERT INTO seo (user_id, url, audits, categories, category_groups) VALUES ($1, $2, $3, $4, $5) RETURNING *'; 
+    const values = [userId, url, audits, seoScore, performanceScore];
+    const queryString = 'INSERT INTO seo (user_id, url, audits, seo_score, performance_score ) VALUES ($1, $2, $3, $4, $5) RETURNING *'; 
     console.log('values> ',values)
     const data = await db.query(queryString, values);
      console.log("data> "+data);
@@ -31,5 +31,29 @@ databaseController.addToSeo = async (req, res, next) => {
     });
   }
 };
+
+
+databaseController.filterScoresAndUrls = async (req, res, next) => {
+  try {
+    const {userId, url} = req.body;
+    const values = [userId, url]
+    const queryString = `SELECT seo_score, performance_score, date
+      FROM seo WHERE user_id = $1 AND url = $2`;
+    const data = await db.query(queryString, values)
+    res.locals.filterSeoScores = data.rows;
+    return next();
+
+  } catch(err) {
+      console.log(err)
+      console.log(err.message);
+      console.log(err.stack);
+  
+      return next({
+        log: 'Express error handler caught error in databaseController.filterScoresAndUrls',
+        message: { err: 'databaseController.filterScoresAndUrls: check server log for details' } 
+      });
+  }
+
+}
 
 module.exports = databaseController;

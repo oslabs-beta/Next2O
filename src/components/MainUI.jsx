@@ -4,6 +4,7 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import logoFill from '../assets/n2o-logo-fill.png';
 import DisplaySeo from '../components/DisplaySeo'
+import SeoHistory from './SeoHistory';
 import Tree from '../components/Tree'
 import Errors from '../components/Errors'
 
@@ -16,7 +17,8 @@ const MainUI = (props) => {
     props.injector()
   }
   const runPerformanceAnalysis = () => {
-    setActive("DisplaySeo")
+    setActive("DisplaySeo");
+    // setActive("SeoHistory");
     // props.performance()
     console.log('performance')
   }
@@ -40,6 +42,7 @@ const MainUI = (props) => {
         <div className='div-body'>
           {active === 'Tree' && <Tree errors={props.errors} />}
           {active === "DisplaySeo" && <DisplaySeo info={props.info} />}
+          {active === "SeoHistory" && <SeoHistory info={props.info} />}
         </div>
 
         <div className='div-footer'>
