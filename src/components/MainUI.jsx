@@ -4,13 +4,13 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import logoFill from '../assets/n2o-logo-fill.png';
 import DisplaySeo from '../components/DisplaySeo'
-import SeoHistory from './SeoHistory';
 import Tree from '../components/Tree'
 import Errors from '../components/Errors'
 import * as d3 from 'd3'
 
 const MainUI = (props) => {
   const [active, setActive] = useState("Tree")
+ 
 
   const runTreeVisualizer = () => {
     const svg = d3.select('#tree-svg')
@@ -38,14 +38,13 @@ const MainUI = (props) => {
             <img id='logo' src={logoFill} alt="Logo" />
           </div>
           <div className='div-icon'>
-            <CloseIcon fontSize='small' className='CloseIcon' />
+            <CloseIcon fontSize='small' className='CloseIcon'/>
           </div>
         </div>
 
         <div className='div-body'>
           {active === 'Tree' && <Tree errors={props.errors} />}
           {active === "DisplaySeo" && <DisplaySeo info={props.info} />}
-          {active === "SeoHistory" && <SeoHistory info={props.info} />}
         </div>
 
         <div className='div-footer'>
