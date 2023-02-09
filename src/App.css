@@ -104,11 +104,7 @@ body {
 
 #tree-error-div {
   border-top: 1px solid #a0a2a554;
-<<<<<<< HEAD
   height: 100%;
-=======
-  flex: 0.3;
->>>>>>> main
   overflow: scroll;
 }
 

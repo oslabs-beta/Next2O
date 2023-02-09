@@ -7,11 +7,14 @@ import DisplaySeo from '../components/DisplaySeo'
 import SeoHistory from './SeoHistory';
 import Tree from '../components/Tree'
 import Errors from '../components/Errors'
+import * as d3 from 'd3'
 
 const MainUI = (props) => {
   const [active, setActive] = useState("Tree")
 
   const runTreeVisualizer = () => {
+    const svg = d3.select('#tree-svg')
+    svg.selectAll('*').remove()
     console.log('click')
     setActive("Tree")
     props.injector()
