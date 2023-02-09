@@ -13,8 +13,3 @@ router.post('/filterSeoScores', databaseController.filterScoresAndUrls, (req, re
 
 module.exports = router;
 
-// score: res.locals.seoData.score,
-    // audits: JSON.parse(res.locals.seoData.audits),
-    // categoryGroups: JSON.parse(res.locals.seoData.category_groups),
-    // domain: res.locals.seoData.user_id_domain,
-    // userId: res.locals.seoData.user_id

@@ -1,6 +1,7 @@
 import { fontWeight } from "@mui/system";
 import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from "recharts";
 import 'react-circular-progressbar/dist/styles.css';
 
 export default function DisplaySeo (props) {
@@ -13,7 +14,9 @@ export default function DisplaySeo (props) {
   const [ttiColor, setTtiColor] = useState('');
   const [tbtColor, setTbtColor] = useState('');
   const [clsColor, setClsColor] = useState('');
+  const [chartData, setChartData] = useState([]);
 
+ 
   const runLighthouse = async (e) => {
     if (debounce === true) return
     setDebounce(true)
@@ -33,9 +36,8 @@ export default function DisplaySeo (props) {
         };
         const report = await response.json();
         let parsed = JSON.parse(report.report);
-        //console.log(parsed.audits['speed-index'].displayValue)
-        await setLighthouseData(parsed)
-        setDebounce(false)
+        setLighthouseData(parsed);
+        setDebounce(false);
         console.log(parsed);
     } catch(err) {
       console.log(err)
@@ -71,6 +73,33 @@ export default function DisplaySeo (props) {
         console.log(err)
       }
   };
+  const filterSeoPerformanceAndAccessibilityScore = async () => {
+    try {
+      const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
+      const response = await fetch('http://localhost:8080/api/filterSeoScores', {
+        method: 'POST',
+        body: JSON.stringify({ 
+        userId : props.info.id,
+        url : currentTab[0].url
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+        })
+        if (!response.ok){
+          throw new Error(response.statusText)
+        };
+        const data = await response.json();
+        console.log(data)
+        setChartData(data)
+    } catch(err) {
+      console.log(err)
+    }
+  };
+ useEffect(() => {
+    filterSeoPerformanceAndAccessibilityScore()
+ }, []);
+ console.log(chartData)
    // tip: be midnful of the fact that after running lighthouse it'd take lighthouseData
    // some time to populate, so using seoScore or performanceScore would work best with
    // conditional rendering 
@@ -194,7 +223,7 @@ export default function DisplaySeo (props) {
     }
     return opportunities;
   };
-
+  
 
   return (
     <div id="seo-div">
@@ -202,6 +231,7 @@ export default function DisplaySeo (props) {
   { !lighthouseData || !lighthouseData.categories ? 
       <div>
         <button id="run-LH-btn" onClick={runLighthouse}>Run Analysis</button>
+
       </div>
       : 
       <>
@@ -390,6 +420,25 @@ export default function DisplaySeo (props) {
           </div>
 
           {lighthouseData && lighthouseData.categories ? <button id="save-data-btn" onClick={sendDataToDatabase}> save data</button> : null}
+          <div>
+            <h3>History</h3>
+            <LineChart width={300} height={150} data={chartData.filterSeo}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis/>
+            <Tooltip />
+            <Legend />
+            {chartData.filterSeo.some(d => d.seo_score !== null) && (
+              <Line type="monotone" dataKey="seo_score" stroke="#8884d8" />
+            )}
+            {chartData.filterSeo.some(d => d.performance_score !== null) && (
+              <Line type="monotone" dataKey="performance_score" stroke="#82ca9d" />
+            )}
+            {chartData.filterSeo.some(d => d.accessibility_score !== null) && (
+              <Line type="monotone" dataKey="accessibility_score" stroke="#ffc658" />
+            )}
+            </LineChart>
+          </div>
           </>}
     </div>
   )
