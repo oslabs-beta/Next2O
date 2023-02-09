@@ -10,20 +10,6 @@ router.post('/seoItems', databaseController.addToSeo, (req, res) => {
 router.post('/filterSeoScores', databaseController.filterScoresAndUrls, (req, res) => {
   res.status(200).json({filterSeo: res.locals.filterSeoScores})
 });
-/* [{
-  date:"A",
-  score:80,
-  performance:10
-},{
-date:"B",
-  score:30,
-  performance:60
-}]
-*/
+
 module.exports = router;
 
-// score: res.locals.seoData.score,
-    // audits: JSON.parse(res.locals.seoData.audits),
-    // categoryGroups: JSON.parse(res.locals.seoData.category_groups),
-    // domain: res.locals.seoData.user_id_domain,
-    // userId: res.locals.seoData.user_id

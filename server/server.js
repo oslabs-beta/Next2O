@@ -4,7 +4,6 @@ const cors = require('cors');
 //const cookieParser = require('cookie-parser');
 
 const lighthouseRouter = require('./routes/lighthouseRouter.js');
-//const cookieRouter = require('./routes/cookies.js');
 const databaseRouter = require('./routes/databaseRouter.js');
 
 
@@ -13,13 +12,9 @@ app.use(express.json({limit:'50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 app.use(cors());
 
-// app.use('/api', cookieRouter);
 app.use('/api', lighthouseRouter);
 app.use('/api', databaseRouter);
 
-
-// catch-all route handler for any requests to an unknown route
-app.use((req, res) => res.status(404).json({ "unknown": "route" }));
 
 app.use((err, req, res, next) => {
   const defaultErr = {

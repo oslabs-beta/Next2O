@@ -7,7 +7,7 @@ async function launchChromeAndRunLighthouse(url) {
   const chrome = await chromeLauncher.launch({startingUrl: url, chromeFlags: ['--headless',
   '--enable-logging', '--disable-gpu','--disable-dev-shm-usage']})
     // '--remote-debugging-port=9222', '--ignore-certificate-errors']});
-  const opts = {logLevel: 'info', output: 'json', onlyCategories: ['seo', 'performance']};
+  const opts = {logLevel: 'info', output: 'json', onlyCategories: ['seo', 'performance', 'accessibility']};
   opts.port = chrome.port
   const runnerResult = await lighthouse(url, opts);
   await chrome.kill();
