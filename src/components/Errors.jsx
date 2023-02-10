@@ -26,7 +26,7 @@ const Errors = (props) => {
   let bgColor = props.bg
   return (
     <div style={{backgroundColor: bgColor, opacity: 0.9}} id='error-div-inner'>
-      <p><strong>Error number:</strong> {props.number + 1}</p>
+      <p><strong>Note number:</strong> {props.number + 1}</p>
       <p><strong>Node type: </strong> {props.type}</p>
       <p><strong>Location:</strong> Height: {props.height} Width: {props.width}</p>
       <p><strong>Message:</strong> {props.msg}</p>

@@ -44,7 +44,7 @@ const Tree = (props) => {
         <button style={{backgroundColor: 'white', width: 'fit-content', height: 'fit-content', padding: '5px', border: '1px solid black', borderRadius: '5px'}} onClick={zoomOut}>Zoom Out</button>
       </div>
       <div id='tree-error-div'>
-        {props.errors ? <h3 style={{textAlign: 'center'}}><strong>Total errors: {props.errors.length}</strong></h3> : ''}
+        {props.errors ? <h3 style={{textAlign: 'center'}}><strong>Total notes: {props.errors.length}</strong></h3> : ''}
         {props.errors && props.errors.length > 0 ? props.errors.map((el, i) => <Errors key={i + 1} number={i} bg={el.bgColor} type={el.type} height={el.id.height} width={el.id.width} msg={el.msg} />) : ''}
       </div>
     </div>

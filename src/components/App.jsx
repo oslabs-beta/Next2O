@@ -355,7 +355,7 @@ export default function App() {
       const nodeHTML = node.innerHTML;
       if (nodeHTML !== pointer.innerHTML) {
         pointer.attributes.clientSide = 'This element was rendered from the client side. It is most likely in a useEffect hook.'
-        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.clientSide })
+        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.clientSide, bgColor: 'lightblue' })
       }
 
       if (pointer.name === undefined || pointer.name === null) console.log('its not here')
@@ -364,7 +364,7 @@ export default function App() {
       if (node.nodeName.toLowerCase() !== pointer.name.toLowerCase()) {
         pointer.attributes.flagged = true
         pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
-        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.elementMismatch, bgColor: 'red' })
+        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.elementMismatch, bgColor: 'pink' })
       }
 
       //check content of current node, compare to browser tree
@@ -375,7 +375,7 @@ export default function App() {
               console.log('mismatch')
               pointer.attributes.flagged = true
               pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.textMismatch, bgColor: 'red' })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.textMismatch, bgColor: 'pink' })
             }
           }
         }
@@ -399,21 +399,21 @@ export default function App() {
             if (parentElementName !== 'DIV') {
               pointer.attributes.flagged = true
               pointer.attributes.nestedElements = 'Make sure you dont have nested HTML elements'
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.nestedElements, bgColor: 'green' })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.nestedElements, bgColor: 'lightgreen' })
             }
           }
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
               pointer.attributes.improperNesting = 'Avoid nesting < button > inside < a > element.'
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting, bgColor: 'green' })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting, bgColor: 'lightgreen' })
             }
           }
           if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
             if (currentElementName.toLowerCase() !== 'li' && currentElementName.toLowerCase() !== 'script' && currentElementName.toLowerCase() !== 'template') {
               pointer.attributes.flagged = true
               pointer.attributes.improperListNesting = 'Avoid nesting anything other than <li>, <script>, or <template> in a list.'
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperListNesting, bgColor: 'green' })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperListNesting, bgColor: 'lightgreen' })
             }
           }
           queue.push({ node: childList[i], pointer: pointer.children[i - offset] })
