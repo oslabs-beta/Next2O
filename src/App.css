@@ -8,17 +8,6 @@ body {
   box-sizing: border-box;
 }
 
-
-/* @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
-
-
 .div-wrapper {
   box-shadow: 0 30px 50px 0 rgb(44 49 59 / 20%);
   background-color: white;
@@ -88,23 +77,16 @@ body {
   height: 100%;
   flex-direction: column;
   flex: 1;
-  /* border-bottom: 2px solid #3f51b53e;
-  /* box-shadow: 2px 2px 2px 2px #3f51b53e; */
-  /* border: 1px solid gainsboro; */
 }
 
 #tree-svg {
-    /* border-bottom: 2px solid #3f51b53e; */
-  /* box-shadow: 2px 2px 2px 2px #3f51b53e; */
-  /* border: 1px solid gainsboro;
-  border-radius: 2px; */
   overflow: scroll;
   flex: 0.7;
 }
 
 #tree-error-div {
   border-top: 1px solid #a0a2a554;
-  flex: 0.3;
+  height: 100%;
   overflow: scroll;
 }
 
@@ -114,26 +96,6 @@ body {
   margin: 5px;
   background-color: white;
 }
-
-
-/* .chart {
-  overflow-y: scroll;
-  overflow-x: scroll;
-  transform: scale(1);
-  zoom: 2.9;
-} */
-
-/* #errorList {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-height: 40vh;
-  margin-top: 5px;
-  align-items: center;
-  overflow-y: scroll;
-} */
-
-
 
 /* /// SEO Component /// */
 
@@ -173,13 +135,6 @@ body {
     color: #fff;
     text-decoration: none;
   }
- 
-
-/* #seo-wheel-total {
-  width: 150px;
-  height: 150px;
-  margin-bottom: 2rem;
-} */
 
 #seo-wheels {
   margin-top: 12px;

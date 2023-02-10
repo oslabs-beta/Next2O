@@ -1,11 +1,9 @@
-import { fontWeight } from "@mui/system";
 import React, {useState , useEffect} from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from "recharts";
 import 'react-circular-progressbar/dist/styles.css';
 
 export default function DisplaySeo (props) {
-  // const [url, setUrl] = useState('')
   const [lighthouseData, setLighthouseData] = useState({});
   const [debounce, setDebounce] = useState(false);
   const [speedIndexColor, setSpeedIndexColor] = useState('');
@@ -15,7 +13,7 @@ export default function DisplaySeo (props) {
   const [tbtColor, setTbtColor] = useState('');
   const [clsColor, setClsColor] = useState('');
   const [chartData, setChartData] = useState([]);
-
+  const [debounceSave, setDebounceSave] = useState(false)
  
   const runLighthouse = async (e) => {
     if (debounce === true) return
@@ -23,7 +21,6 @@ export default function DisplaySeo (props) {
     try {
         e.preventDefault();
         const currentTab = await chrome.tabs.query({active: true, currentWindow: true});
-        // setUrl(currentTab);
         const response = await fetch('http://localhost:8080/api/lighthouse', {
         method: 'POST',
         body: JSON.stringify({ url : currentTab[0].url}),
@@ -38,6 +35,7 @@ export default function DisplaySeo (props) {
         let parsed = JSON.parse(report.report);
         setLighthouseData(parsed);
         setDebounce(false);
+        setDebounceSave(true)
         console.log(parsed);
     } catch(err) {
       console.log(err)
@@ -45,7 +43,7 @@ export default function DisplaySeo (props) {
   };
 
   const sendDataToDatabase = async (e) => {
-
+    if (debounceSave === false) return;
     e.preventDefault();
     try {
       
@@ -68,6 +66,7 @@ export default function DisplaySeo (props) {
         throw new Error(response.statusText)
       }
       const data = await response.json();
+      setDebounceSave(false)
       console.log(data);
       } catch (err) {
         console.log(err)
@@ -99,10 +98,6 @@ export default function DisplaySeo (props) {
  useEffect(() => {
     filterSeoPerformanceAndAccessibilityScore()
  }, []);
- console.log(chartData)
-   // tip: be midnful of the fact that after running lighthouse it'd take lighthouseData
-   // some time to populate, so using seoScore or performanceScore would work best with
-   // conditional rendering 
 
    const filledStyle = {
     backgroundColor: '#3F51B5',
@@ -110,20 +105,12 @@ export default function DisplaySeo (props) {
     textSize: '24px',
     pathColor: '#fff',
     trailColor: 'transparent'
-  }
-
-  //  const thinStyle = {
-  //   textColor: "#3F51B5",
-  //   pathColor: "#3F51B5",
-  //   textSize: "24px",
-  // }
-  
+  }  
 
   useEffect(() => {
     if (lighthouseData.audits && lighthouseData.audits['speed-index'].displayValue) {
       let speedIndex = lighthouseData.audits['speed-index'].displayValue;
       speedIndex = parseFloat(speedIndex.split('s')[0]);
-      
       if (speedIndex >= 0 && speedIndex <= 3.4) {
         setSpeedIndexColor('green');
       } else if (speedIndex > 3.4 && speedIndex <= 5.8) {
@@ -265,25 +252,6 @@ export default function DisplaySeo (props) {
           <p style={{ padding: '5px' }}>Accessibility</p> 
         </div> : null}
       </div>
-      {/* <div id="seo-bins">
-        <h2 style={{color: 'rgb(70, 70, 70)'}}>Metrics</h2>
-        <div id="seo-bin-values">
-
-      
-          {/* <div id="seo-metrics-box">
-            <p id="metrics-value" style={{display: 'inline-block', float: 'right'}}>2.5ms</p>
-            <p><strong>Heading</strong></p>
-            <div id="metrics-desc-div">Description Lorem ipsum dolor sit amet consectetur </div>
-          </div> */}
-
-        {/* </div>
-      </div> */}
-
-      
-      {/* <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-        <div style={{ flex: "1 1 calc(50% - 5px)", padding: "5px" }}>
-           */}
-            
           <div>
               {lighthouseData.audits && lighthouseData.audits['speed-index'].displayValue ? (
               <div id="seo-metrics-box">
@@ -419,7 +387,7 @@ export default function DisplaySeo (props) {
             )}
           </div>
 
-          {lighthouseData && lighthouseData.categories ? <button id="save-data-btn" onClick={sendDataToDatabase}> save data</button> : null}
+          {lighthouseData && lighthouseData.categories ? <button id="save-data-btn" onClick={sendDataToDatabase}>save data</button> : null}
           <div>
             <h3>History</h3>
             <LineChart width={300} height={150} data={chartData.filterSeo}>

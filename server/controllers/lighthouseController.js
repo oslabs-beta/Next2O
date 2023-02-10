@@ -6,7 +6,6 @@ const lighthouseController = {};
 async function launchChromeAndRunLighthouse(url) {
   const chrome = await chromeLauncher.launch({startingUrl: url, chromeFlags: ['--headless',
   '--enable-logging', '--disable-gpu','--disable-dev-shm-usage']})
-    // '--remote-debugging-port=9222', '--ignore-certificate-errors']});
   const opts = {logLevel: 'info', output: 'json', onlyCategories: ['seo', 'performance', 'accessibility']};
   opts.port = chrome.port
   const runnerResult = await lighthouse(url, opts);
@@ -15,11 +14,7 @@ async function launchChromeAndRunLighthouse(url) {
 };
 
 lighthouseController.generateReport = async (req, res, next) => {
-  //console.log(req.body)
   const {url} = req.body;
-  console.log('url> '+url);
-  // const {cookies} = req.headers;
-  //console.log(req.headers);
   try {
     const report = await launchChromeAndRunLighthouse(url);
     res.locals.report = report

@@ -6,8 +6,9 @@
   "mode": "production",
   "scripts": {
     "start": "nodemon server/server.js",
+    "server": "webpack --config ./webpack.prod.js",
     "dev": "nodemon server/server.js & NODE_ENV=development webpack --watch --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js --mode production",
+    "build": "webpack --config webpack.config.js --mode development",
     "test": "jest",
     "eject": ""
   },

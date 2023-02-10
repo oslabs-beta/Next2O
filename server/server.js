@@ -1,13 +1,10 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-//const cookieParser = require('cookie-parser');
 
 const lighthouseRouter = require('./routes/lighthouseRouter.js');
 const databaseRouter = require('./routes/databaseRouter.js');
 
-
-//app.use(cookieParser());
 app.use(express.json({limit:'50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 app.use(cors());
@@ -15,6 +12,7 @@ app.use(cors());
 app.use('/api', lighthouseRouter);
 app.use('/api', databaseRouter);
 
+console.log('request')
 
 app.use((err, req, res, next) => {
   const defaultErr = {

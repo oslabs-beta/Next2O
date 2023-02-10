@@ -8,16 +8,10 @@ databaseController.addToSeo = async (req, res, next) => {
     
     const values = [userId, url, audits, seoScore, performanceScore, accessibilityScore];
     const queryString = 'INSERT INTO seo (user_id, url, audits, seo_score, performance_score, accessibility_score ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *'; 
-    console.log('values> ',values)
     const data = await db.query(queryString, values);
-     console.log("data> "+data);
-     console.log('data.rows> '+data.rows[0]);
 
     res.locals.seoData = data.rows[0];
-    // res.locals.userId = userId;
-    // res.locals.categoryGroups = categoryGroups;
-    // res.locals.domain = domain;
-    // res.locals.audits = audits;
+   
     return next();
   } 
   catch(err) {

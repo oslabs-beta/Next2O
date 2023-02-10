@@ -8,7 +8,6 @@ module.exports = {
   mode: 'development',
   entry: { 
     index: path.resolve(__dirname, "./src/index.jsx"),
-    background: path.resolve(__dirname, "./src/background.js")
   },
   output: {
     path: path.resolve(__dirname, "./build"),

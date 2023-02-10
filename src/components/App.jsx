@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { DisplaySeo } from './DisplaySeo';
 import * as d3 from 'd3';
 import '../App.css';
 import MainUI from './MainUI'
@@ -82,34 +81,14 @@ export default function App() {
     gNode.style("stroke-width", 3 / Math.sqrt(transform.k));
     gLink.attr("transform", (transform = e.transform));
     gLink.style("stroke-width", 3 / Math.sqrt(transform.k));
-    // points.attr("r", 3 / Math.sqrt(transform.k));
   });
   
     svg.call(zoom)
     .call(zoom.transform, d3.zoomIdentity)
     .on("pointermove", event => {
       const p = transform.invert(d3.pointer(event));
-      // const i = delaunay.find(...p);
-      // points.classed("highlighted", (_, j) => i === j);
-      // d3.select(points.nodes()[i]).raise();
     })
     .node();
-
-    // svg.call(d3.zoom()
-    //   .scaleExtent([30, Infinity])
-    //   .extent([[80, 120], [100, 40]])
-    //   .on('zoom', (event) => zoomed(event))
-    // )
-
-    
-
-    // function zoomed(e) {
-    //   console.log(e)
-
-    //   d3.selectAll('g').attr('transform', `translate(${e.sourceEvent.x}, ${e.sourceEvent.y}) scale(${e.transform.k + 1})`);
-    //   update(root)
-
-    // }
 
     var tooltip = d3.select('#tree-div')
       .append("div")
@@ -149,9 +128,7 @@ export default function App() {
 
       const node = gNode.selectAll("g")
         .data(nodes, d => d.id)
-        // .attr('id', d => `${d.data.id.height}, ${d.data.id.width}`)
         .on('mouseenter', function (event, d, i) {
-          console.log('hey')
           let attr = Object.keys(d.data.attributes)
           const checkedMismatch = ['elementMismatch', 'textMismatch', 'nestedElements', 'improperNesting', 'improperListNesting']
           let htmlMessage = ''
@@ -312,10 +289,6 @@ export default function App() {
       //add keys to object
       if (!context.attributes) context.attributes = {}
       if (!context.name) context.name = ''
-      // if (domNode.onclick && domNode.onclick !== undefined && domNode.onclick !== null) {
-      //   console.log(domNode.onclick)
-      //   context.attributes.onclick = domNode.onclick
-      // }
 
       //add name and text to object
       if (domNode.nodeName) context.name = domNode.nodeName
@@ -341,30 +314,6 @@ export default function App() {
           }
         }
       }
-      //check to see if react fiber has event listeners or text props
-      // if (Object.keys(domNode).length > 1 && String(Object.keys(domNode)[1]).includes('__reactProps')) {
-      //   let prop = domNode[Object.keys(domNode)[1]]
-      //   if (prop.children !== null && prop.children !== undefined && !Array.isArray(prop.children)) {
-      //     context.attributes.text = prop.children
-      //   }
-      //   let propChain = Object.keys(prop)
-      //   console.log(propChain)
-      //   if (propChain.length > 0) {
-      //     for (let i = 0; i < propChain.length; i++) {
-      //       if (propChain[i].slice(0, 2) === 'on') {
-      //         let hydratedProp = propChain[i]
-      //         // let val = prop[hydratedProp]
-      //         if (prop[hydratedProp] === undefined) {
-      //           context.attributes[hydratedProp] = undefined
-      //         } else if (prop[hydratedProp] === null) {
-      //           context.attributes[hydratedProp] = null
-      //         } else {
-      //           context.attributes[hydratedProp] = String(prop[hydratedProp])
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
 
       //push node onto queue with correct pointer
       if (domNode.childNodes !== null && domNode.childNodes.length > 0) {
@@ -405,9 +354,6 @@ export default function App() {
 
       const nodeHTML = node.innerHTML;
       if (nodeHTML !== pointer.innerHTML) {
-        console.log(nodeHTML)
-        console.log(pointer.innerHTML)
-        // pointer.attributes.flagged = true;
         pointer.attributes.clientSide = 'This element was rendered from the client side. It is most likely in a useEffect hook.'
         errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.clientSide })
       }
@@ -418,7 +364,7 @@ export default function App() {
       if (node.nodeName.toLowerCase() !== pointer.name.toLowerCase()) {
         pointer.attributes.flagged = true
         pointer.attributes.elementMismatch = 'HTML element is different from the previous render.'
-        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.elementMismatch })
+        errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.elementMismatch, bgColor: 'red' })
       }
 
       //check content of current node, compare to browser tree
@@ -429,7 +375,7 @@ export default function App() {
               console.log('mismatch')
               pointer.attributes.flagged = true
               pointer.attributes.textMismatch = `This node rendered ${pointer.attributes.content} first and then ${node.textContent} the second time.`
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.textMismatch })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.textMismatch, bgColor: 'red' })
             }
           }
         }
@@ -453,21 +399,21 @@ export default function App() {
             if (parentElementName !== 'DIV') {
               pointer.attributes.flagged = true
               pointer.attributes.nestedElements = 'Make sure you dont have nested HTML elements'
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.nestedElements })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.nestedElements, bgColor: 'green' })
             }
           }
           if (parentElementName.toLowerCase() === 'a') {
             if (currentElementName.toLowerCase() === 'button') {
               pointer.attributes.flagged = true
               pointer.attributes.improperNesting = 'Avoid nesting < button > inside < a > element.'
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperNesting, bgColor: 'green' })
             }
           }
           if (parentElementName.toLowerCase() === 'ul' || parentElementName.toLowerCase() === 'ol') {
             if (currentElementName.toLowerCase() !== 'li' && currentElementName.toLowerCase() !== 'script' && currentElementName.toLowerCase() !== 'template') {
               pointer.attributes.flagged = true
               pointer.attributes.improperListNesting = 'Avoid nesting anything other than <li>, <script>, or <template> in a list.'
-              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperListNesting })
+              errors.push({ type: pointer.name, id: pointer.id, msg: pointer.attributes.improperListNesting, bgColor: 'green' })
             }
           }
           queue.push({ node: childList[i], pointer: pointer.children[i - offset] })
@@ -487,26 +433,7 @@ export default function App() {
   return (
     <div>
       <MainUI errors={errorList} injector={injectFunction} info={userInfo} />
-      {/*   performance={runLighthouseAndSendCookies} */}
-
     </div>
 
   )
 }
-
-{/* <div className="App" style={{ height: '2000px', width: '2000px' }}>
-      <button onClick={injectFunction}>Click me</button>
-      <button onClick={handlelighthouseClick}> Run lighthouse test</button> */}
-
-{/* <button onClick={grabCookiesFromBackground}> click to set cookies</button> */ }
-
-// <p>{url}</p>
-// {errorMessage && <div className='errorMessage'>"Error: " {errorMessage}</div>}
-
-{/* {lighthouseData && < DisplaySeo lighthouseData = {lighthouseData}/>} */ }
-
-    //   <div id="treeWrapper" style={{ height: '100px', width: '100px' }}>
-    //     {nestedObj.name ? 'works' : ''}
-    //   </div>
-    //   <div><svg class='chart'></svg></div>
-    // </div>

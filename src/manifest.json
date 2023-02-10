@@ -3,22 +3,14 @@
   "name": "Next2O",
   "version": "1.0",
   "manifest_version": 3,
-  "background": {
-    "service_worker": "background.js"
-  },
   "action": {
     "default_popup": "index.html",
     "default_title": "Next2O debugger",
     "default_icon": "icon96.png"
   },
-  "host_permissions": [
-    "<all_urls>"
-  ],
   "permissions": [
     "activeTab",
     "scripting",
-    "cookies",
-    "background",
     "tabs",
     "identity",
     "identity.email"
