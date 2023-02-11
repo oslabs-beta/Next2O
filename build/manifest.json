@@ -6,8 +6,11 @@
   "action": {
     "default_popup": "index.html",
     "default_title": "Next2O debugger",
-    "default_icon": "icon96.png"
+    "default_icon": "128-icon.png"
   },
+  "icons" : {
+    "128": "128-icon.png"
+  }, 
   "permissions": [
     "activeTab",
     "scripting",
@@ -15,5 +18,4 @@
     "identity",
     "identity.email"
   ]
-  
 }
